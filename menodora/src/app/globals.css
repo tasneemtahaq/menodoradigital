@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+
+
+@theme {
+  --color-luxury-black: #000000;
+  --color-luxury-gold: #D4AF37;
+  --color-luxury-white: #FFFFFF;
+  --color-luxury-text: #222222;
+  --color-luxury-gold-light: #E8C766;
+}
