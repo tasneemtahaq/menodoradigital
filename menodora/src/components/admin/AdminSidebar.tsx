@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Package, ShoppingCart, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -12,8 +13,17 @@ const navItems = [
   { href: "/admin/customers", label: "Customers", icon: Users },
 ];
 
+
 export function AdminSidebar() {
   const pathname = usePathname();
+
+  const router = useRouter();
+
+async function handleLogout() {
+  await fetch("/api/admin/logout", { method: "POST" });
+  router.push("/admin-login");
+  router.refresh();
+}
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-white/10 bg-neutral-950 p-6">
@@ -52,6 +62,12 @@ export function AdminSidebar() {
         >
           ← Back to Store
         </Link>
+        <button
+         onClick={handleLogout}
+         className="mt-2 block w-full rounded-xl px-4 py-3 text-left text-sm text-gray-500 hover:text-white"
+        >
+           Logout
+       </button>
       </div>
     </aside>
   );

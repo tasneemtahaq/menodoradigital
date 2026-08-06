@@ -1,26 +1,28 @@
-import type { Metadata } from "next";
+"use client"
+
 import "./globals.css";
+import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/context/CartContext";
 
-export const metadata: Metadata = {
-  title: "Menodora Digital Printed Fabrics",
-  description: "Premium digital printed abaya fabrics — luxury, elegance, and timeless quality, crafted in Pakistan.",
-};
+
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin");
+
   return (
     <html lang="en">
       <body>
         <CartProvider>
-          <Navbar />
+          {!isAdminRoute && <Navbar />}
           {children}
-          <Footer />
+          {!isAdminRoute && <Footer />}
         </CartProvider>
       </body>
     </html>

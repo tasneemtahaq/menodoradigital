@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const categories = [
-  { id: "chiffon", name: "Chiffon" },
-  { id: "silk", name: "Silk" },
-  { id: "crepe", name: "Crepe" },
-  { id: "georgette", name: "Georgette" },
+  { id: "cotton", name: "Cotton" },
+  { id: "mixed", name: "Mixed" },
+  { id: "embroidered", name: "Embroidered" },
+  { id: "lawn", name: "Lawn" },
 ];
 
 export function Categories() {

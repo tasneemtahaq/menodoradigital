@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Heart, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import Image from "next/image";
 
 export type Product = {
   id: string;
@@ -13,6 +14,7 @@ export type Product = {
   price: number;
   discountPrice?: number;
   stock: number;
+  image1?: string | null;
 };
 
 export function ProductCard({ product }: { product: Product }) {
@@ -25,11 +27,21 @@ export function ProductCard({ product }: { product: Product }) {
     <div className="group relative overflow-hidden rounded-2xl bg-neutral-900">
       {/* Image area */}
       <Link href={`/products/${product.id}`} className="block">
-        <div className="relative flex h-72 items-center justify-center overflow-hidden bg-linear-to-br from-neutral-800 to-neutral-900 transition-transform duration-500 group-hover:scale-105">
-          <span className="text-sm tracking-widest text-luxury-gold/30 uppercase">
-            {product.name}
-          </span>
-
+        <div className="relative h-72 overflow-hidden">
+  {product.image1 ? (
+    <Image
+      src={product.image1}
+      alt={product.name}
+      fill
+      className="object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+  ) : (
+    <div className="flex h-full items-center justify-center bg-linear-to-br from-neutral-800 to-neutral-900">
+      <span className="text-sm tracking-widest text-luxury-gold/30 uppercase">
+        {product.name}
+      </span>
+    </div>
+  )}
           {/* Discount badge */}
           {hasDiscount && (
             <span className="absolute top-3 left-3 rounded-full bg-luxury-gold px-3 py-1 text-xs font-semibold text-luxury-black">

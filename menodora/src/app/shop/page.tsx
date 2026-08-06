@@ -8,13 +8,14 @@ export default async function ShopPage() {
   });
 
   const products: Product[] = dbProducts.map((p) => ({
-    id: p.id,
-    name: p.name,
-    category: p.category,
-    price: p.price,
-    discountPrice: p.discountPrice ?? undefined,
-    stock: p.stock,
-  }));
+  id: p.id,
+  name: p.name,
+  category: p.category,
+  price: p.price,
+  discountPrice: p.discountPrice ?? undefined,
+  stock: p.stock,
+  image1: p.image1,
+}));
 
   return <ShopClient products={products} />;
 }

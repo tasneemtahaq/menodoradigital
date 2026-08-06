@@ -14,8 +14,8 @@ type Review = {
 const reviews: Review[] = [
   {
     id: "1",
-    name: "Ayesha K.",
-    location: "Lahore",
+    name: "Sakina lakda.",
+    location: "Karachi",
     rating: 5,
     text: "The fabric quality exceeded my expectations. The print detail is stunning and it drapes beautifully.",
   },
@@ -28,8 +28,8 @@ const reviews: Review[] = [
   },
   {
     id: "3",
-    name: "Sana M.",
-    location: "Islamabad",
+    name: "Khadija Saleem.",
+    location: "Karachi",
     rating: 4,
     text: "Beautiful fabric and quick delivery. Customer service was very responsive when I asked about stock.",
   },

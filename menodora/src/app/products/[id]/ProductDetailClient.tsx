@@ -5,14 +5,24 @@ import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import type { Product as DbProduct } from "@/generated/prisma/client";
+import Image from "next/image";
+
 
 export function ProductDetailClient({ product }: { product: DbProduct }) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
 
+  const [activeImage, setActiveImage] = useState(product.image1 || null);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const images = [product.image1, product.image2, product.image3].filter(
+    (img): img is string => Boolean(img)
+  );
+
   const stock = product.stock;
   const isOutOfStock = product.stock === 0;
   const hasDiscount = product.discountPrice !== null;
+
+  
 
   function increaseQuantity() {
     if (quantity < stock) {
@@ -26,16 +36,65 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
     }
   }
 
+  
+
   return (
     <main className="min-h-screen bg-luxury-black pt-32 pb-24">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           {/* Image gallery placeholder */}
-          <div className="flex h-125 items-center justify-center rounded-2xl bg-linear-to-br from-neutral-800 to-neutral-900">
-            <span className="text-lg tracking-widest text-luxury-gold/30 uppercase">
-              {product.name}
-            </span>
-          </div>
+          <div>
+  <div
+    onClick={() => activeImage && setIsZoomOpen(true)}
+    className="relative flex h-125 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-neutral-800 to-neutral-900 cursor-zoom-in"
+  >
+    {activeImage ? (
+      <Image
+        src={activeImage}
+        alt={product.name}
+        fill
+        className="object-cover"
+      />
+    ) : (
+      <span className="text-lg tracking-widest text-luxury-gold/30 uppercase">
+        {product.name}
+      </span>
+    )}
+  </div>
+
+  {images.length > 1 && (
+    <div className="mt-4 flex gap-3">
+      {images.map((img, index) => (
+        <button
+          key={index}
+          onClick={() => setActiveImage(img)}
+          className={cn(
+            "relative h-20 w-20 overflow-hidden rounded-xl border-2 transition-colors",
+            activeImage === img ? "border-luxury-gold" : "border-transparent"
+          )}
+        >
+          <Image src={img} alt={`${product.name} ${index + 1}`} fill className="object-cover" />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+{isZoomOpen && activeImage && (
+  <div
+    onClick={() => setIsZoomOpen(false)}
+    className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 p-6 cursor-zoom-out"
+  >
+    <div className="relative h-full max-h-[90vh] w-full max-w-3xl">
+      <Image
+        src={activeImage}
+        alt={product.name}
+        fill
+        className="object-contain"
+      />
+    </div>
+  </div>
+)}
 
           {/* Product info */}
           <div>

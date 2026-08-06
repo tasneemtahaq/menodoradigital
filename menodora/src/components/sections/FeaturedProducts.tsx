@@ -8,13 +8,14 @@ export async function FeaturedProducts() {
   });
 
   const products: Product[] = dbProducts.map((p) => ({
-    id: p.id,
-    name: p.name,
-    category: p.category,
-    price: p.price,
-    discountPrice: p.discountPrice ?? undefined,
-    stock: p.stock,
-  }));
+  id: p.id,
+  name: p.name,
+  category: p.category,
+  price: p.price,
+  discountPrice: p.discountPrice ?? undefined,
+  stock: p.stock,
+  image1: p.image1,
+}));
 
   return (
     <section className="bg-luxury-white px-6 py-24 md:px-12">

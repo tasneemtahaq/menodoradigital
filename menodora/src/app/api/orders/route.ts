@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendOrderNotification } from "@/lib/discord";
 
 type OrderItemInput = {
   productId: string;
@@ -62,6 +63,18 @@ export async function POST(request: Request) {
         data: { stock: { decrement: item.quantity } },
       });
     }
+
+    await sendOrderNotification({
+  orderNumber: order.orderNumber,
+  fullName: order.fullName,
+  phone: order.phone,
+  address: order.address,
+  city: order.city,
+  paymentMethod: order.paymentMethod,
+  transactionId: order.transactionId,
+  items: order.items,
+  grandTotal: order.grandTotal,
+});
 
     return NextResponse.json({ success: true, order }, { status: 201 });
   } catch (error) {

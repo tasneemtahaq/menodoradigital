@@ -106,14 +106,14 @@ export default function ContactPage() {
               <Phone className="mt-1 h-5 w-5 shrink-0 text-luxury-gold" />
               <div>
                 <h3 className="text-sm font-semibold text-luxury-white">Phone</h3>
-                <p className="mt-1 text-sm text-gray-400">+92 300 0000000</p>
+                <p className="mt-1 text-sm text-gray-400">+92-331-2287497</p>
               </div>
             </div>
             <div className="flex items-start gap-4 rounded-2xl bg-neutral-900 p-6">
               <Mail className="mt-1 h-5 w-5 shrink-0 text-luxury-gold" />
               <div>
                 <h3 className="text-sm font-semibold text-luxury-white">Email</h3>
-                <p className="mt-1 text-sm text-gray-400">hello@menodora.com</p>
+                <p className="mt-1 text-sm text-gray-400">tasneemtahaq@gmail.com</p>
               </div>
             </div>
           </div>

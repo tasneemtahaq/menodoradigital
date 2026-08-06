@@ -30,7 +30,7 @@ export default function AboutPage() {
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-gray-400 md:text-base">
           Menodora Digital Printed Fabrics was founded with a simple belief: that every
-          abaya deserves to be as thoughtfully made as the woman who wears it. Based in
+          Rida deserves to be as thoughtfully made as the woman who wears it. Based in
           Karachi, Pakistan, we design and digitally print premium fabrics that bring
           together timeless elegance and modern craftsmanship — in small, limited batches,
           never mass produced.

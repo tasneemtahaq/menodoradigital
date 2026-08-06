@@ -8,7 +8,7 @@ import { Reviews } from "@/components/sections/Reviews";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-luxury-black">
+    <main className="min-h-screen pt-20  bg-luxury-black">
       <Navbar />
       <Hero />
       <FeaturedCollections />
