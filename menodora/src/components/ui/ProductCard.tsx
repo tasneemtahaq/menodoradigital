@@ -6,6 +6,7 @@ import { Heart, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
+import { useWishlist } from "@/context/WishlistContext";
 
 export type Product = {
   id: string;
@@ -18,7 +19,21 @@ export type Product = {
 };
 
 export function ProductCard({ product }: { product: Product }) {
-  const [isFavorited, setIsFavorited] = useState(false);
+
+
+// inside the component:
+const { productIds, toggleWishlist } = useWishlist();
+const isFavorited = productIds.includes(product.id);
+const [isWishlistLoading, setIsWishlistLoading] = useState(false);
+
+async function handleWishlistClick() {
+  setIsWishlistLoading(true);
+  const result = await toggleWishlist(product.id);
+  if (result.requiresLogin) {
+    window.location.href = "/login";
+  }
+  setIsWishlistLoading(false);
+}
   const { addToCart } = useCart();
   const isOutOfStock = product.stock === 0;
   const hasDiscount = product.discountPrice !== undefined;
@@ -60,10 +75,12 @@ export function ProductCard({ product }: { product: Product }) {
 
       {/* Favorite button */}
       <button
-        onClick={() => setIsFavorited(!isFavorited)}
-        className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm transition-colors hover:bg-black/70"
-        aria-label="Add to wishlist"
-      >
+          onClick={handleWishlistClick}
+          disabled={isWishlistLoading}
+          className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm transition-colors hover:bg-black/70 disabled:opacity-50"
+          aria-label="Add to wishlist"
+        >
+      
         <Heart
           className={cn(
             "h-4 w-4 transition-colors",

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/context/CartContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 
 
@@ -19,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-          {!isAdminRoute && <Navbar />}
-          {children}
-          {!isAdminRoute && <Footer />}
-        </CartProvider>
+        <WishlistProvider>
+          <CartProvider>
+            {!isAdminRoute && <Navbar />}
+              {children}
+            {!isAdminRoute && <Footer />}
+          </CartProvider>
+        </WishlistProvider>
       </body>
     </html>
   );

@@ -6,9 +6,22 @@ import { Search, Heart, ShoppingBag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
+import { SearchOverlay } from "./SearchOverlay";
+import { useWishlist } from "@/context/WishlistContext";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { productIds } = useWishlist();
+  const wishlistCount = productIds.length;
+
+useEffect(() => {
+  fetch("/api/auth/me")
+    .then((res) => res.json())
+    .then((data) => setIsLoggedIn(data.loggedIn))
+    .catch(() => setIsLoggedIn(false));
+}, []);
 
   useEffect(() => {
     function handleScroll() {
@@ -65,8 +78,17 @@ export function Navbar() {
 
         {/* Icons */}
         <div className="flex items-center gap-5">
+          <button onClick={() => setIsSearchOpen(true)} aria-label="Search">
           <Search className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
-          <Heart className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+          </button>
+          <Link href={isLoggedIn ? "/account" : "/login"} className="relative">
+           <Heart className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+             {wishlistCount > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-luxury-gold text-[10px] font-bold text-luxury-black">
+                {wishlistCount}
+              </span>
+              )}
+          </Link>
           <Link href="/cart" className="relative">
           <ShoppingBag className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
               {totalItems > 0 && (
@@ -75,9 +97,12 @@ export function Navbar() {
                  </span>
                    )}
             </Link>
-          <User className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+          <Link href={isLoggedIn ? "/account" : "/login"}>
+               <User className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+         </Link>
         </div>
       </div>
+    {isSearchOpen && <SearchOverlay onClose={() => setIsSearchOpen(false)} />}
     </nav>
   );
 }

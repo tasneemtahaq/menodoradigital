@@ -3,22 +3,32 @@
 import { useState, useMemo } from "react";
 import { ProductCard, type Product } from "@/components/ui/ProductCard";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 const categoryFilters = ["All", "Cotton", "Lawn", "Mixed Fabric", "Embroidered"];
 
 type SortOption = "default" | "price-asc" | "price-desc";
 
 export function ShopClient({ products }: { products: Product[] }) {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+  const [activeCategory, setActiveCategory] = useState(categoryFromUrl || "All");
+  const searchFromUrl = searchParams.get("search") || "";
   const [sortOption, setSortOption] = useState<SortOption>("default");
 
   const visibleProducts = useMemo(() => {
-    let result = products;
+  let result = products;
 
-    if (activeCategory !== "All") {
-      result = result.filter((product) => product.category === activeCategory);
-    }
+  if (activeCategory !== "All") {
+    result = result.filter((product) => product.category === activeCategory);
+  }
 
+  if (searchFromUrl) {
+    result = result.filter((product) =>
+      product.name.toLowerCase().includes(searchFromUrl.toLowerCase())
+    );
+  }
+    
     if (sortOption === "price-asc") {
       result = [...result].sort((a, b) => {
         const priceA = a.discountPrice ?? a.price;
@@ -34,7 +44,7 @@ export function ShopClient({ products }: { products: Product[] }) {
     }
 
     return result;
-  }, [products, activeCategory, sortOption]);
+  }, [products, activeCategory, sortOption, searchFromUrl]);
 
   return (
     <main className="min-h-screen bg-luxury-black pt-32 pb-24">

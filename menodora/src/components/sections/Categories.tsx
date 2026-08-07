@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const categories = [
-  { id: "cotton", name: "Cotton" },
-  { id: "mixed", name: "Mixed" },
-  { id: "embroidered", name: "Embroidered" },
-  { id: "lawn", name: "Lawn" },
+  { id: "Cotton", name: "Cotton" },
+  { id: "Lawn", name: "Lawn" },
+  { id: "Mixed Fabric", name: "Mixed Fabric" },
+  { id: "Embroidered", name: "Embroidered" },
 ];
 
 export function Categories() {
@@ -41,7 +41,7 @@ export function Categories() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <Link
-                href={`/categories/${category.id}`}
+  href={`/shop?category=${encodeURIComponent(category.id)}`}
                 className="group relative flex h-48 items-center justify-center overflow-hidden rounded-xl border border-luxury-gold/20 bg-neutral-900 transition-colors hover:border-luxury-gold"
               >
                 <span className="text-lg font-medium tracking-wide text-luxury-white transition-colors group-hover:text-luxury-gold">

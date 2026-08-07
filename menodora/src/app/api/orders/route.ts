@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendOrderNotification } from "@/lib/discord";
+import { verifyUserSession } from "@/lib/session";
 
 type OrderItemInput = {
   productId: string;
@@ -23,6 +24,7 @@ type OrderRequestBody = {
 export async function POST(request: Request) {
   try {
     const body: OrderRequestBody = await request.json();
+    const userId = await verifyUserSession();
 
     if (!body.fullName || !body.phone || !body.address || !body.items.length) {
       return NextResponse.json(
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
     const order = await prisma.order.create({
       data: {
         orderNumber,
+        userId: userId || null,
         fullName: body.fullName,
         phone: body.phone,
         address: body.address,

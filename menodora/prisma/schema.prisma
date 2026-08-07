@@ -30,6 +30,8 @@ model Product {
 model Order {
   id              String      @id @default(cuid())
   orderNumber     String      @unique
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
   fullName        String
   phone           String
   address         String
@@ -53,4 +55,25 @@ model OrderItem {
   productName String
   price       Int
   quantity    Int
+}
+model User {
+  id           String        @id @default(cuid())
+  fullName     String
+  email        String        @unique
+  passwordHash String
+  phone        String?
+  orders       Order[]
+  wishlist     WishlistItem[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model WishlistItem {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  productId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
 }

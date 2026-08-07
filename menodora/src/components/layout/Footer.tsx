@@ -25,7 +25,7 @@ export function Footer() {
             </p>
             <div className="mt-5 flex gap-4">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/menodora_digitalprints/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
