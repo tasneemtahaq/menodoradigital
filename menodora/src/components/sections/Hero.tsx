@@ -17,7 +17,8 @@ export function Hero() {
           transition={{ duration: 0.6 }}
           className="mb-4 text-sm tracking-[0.3em] text-luxury-gold uppercase"
         >
-          Premium Digital Printed Fabrics
+          Welcome to {" "}
+          <span className="text-luxury-gold font-bold text-2xl">Menodora</span> Premium Digital Fabrics
         </motion.p>
 
         <motion.h1

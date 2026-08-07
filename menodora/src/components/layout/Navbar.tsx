@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
-
+import Image from "next/image";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,8 +34,14 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold tracking-wide text-luxury-gold">
-          MENODORA
+       <Link href="/">
+           <Image
+              src="/images/logo.jpg"
+              alt="Menodora Logo"
+              width={120}
+              height={50}
+              priority
+             />
         </Link>
 
         {/* Nav Links - hidden on mobile for now */}
@@ -43,7 +49,7 @@ export function Navbar() {
           <Link href="/shop" className="text-sm text-luxury-white hover:text-luxury-gold">
             Shop
           </Link>
-          <Link href="/categories" className="text-sm text-luxury-white hover:text-luxury-gold">
+          <Link href="/#categories" className="text-sm text-luxury-white hover:text-luxury-gold">
             Categories
           </Link>
           <Link href="/new-arrivals" className="text-sm text-luxury-white hover:text-luxury-gold">

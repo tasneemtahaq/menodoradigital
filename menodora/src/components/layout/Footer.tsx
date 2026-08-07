@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -9,11 +10,18 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand column */}
           <div>
-            <h3 className="text-xl font-bold tracking-wide text-luxury-gold">
-              MENODORA
-            </h3>
+            <Link href="/">
+               <Image
+                  src="/images/logo.jpg"
+                  alt="Menodora Logo"
+                  width={150}
+                  height={50}
+                  priority
+                 />
+              </Link>
+           
             <p className="mt-3 text-sm text-gray-400">
-              Premium digital printed abaya fabrics, crafted for those who value timeless luxury.
+              Premium digital printed Rida fabrics, crafted for those who value timeless luxury.
             </p>
             <div className="mt-5 flex gap-4">
               <a

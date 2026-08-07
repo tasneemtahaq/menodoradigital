@@ -5,22 +5,28 @@ import Link from "next/link";
 
 const collections = [
   {
-    id: "ohbat",
-    name: "OHBAT Collection",
+    id: "mixed",
+    name: "Everyday Essentials",
     description: "Ideal for Summers",
-    href: "/categories/ohbat",
+    href: "/categories/mixed",
   },
   {
-    id: "noor",
-    name: "Vintage Floral Series",
+    id: "cotton ",
+    name: "Cotton Collection",
     description: "Soft tones for everyday elegance",
-    href: "/categories/noor",
+    href: "/categories/cotton",
   },
   {
     id: "zareen",
-    name: "Zareen Collection",
+    name: "Zareen",
     description: "Embroidered series is Coming Soon",
-    href: "/categories/zareen",
+    href: "/categories/embroidery",
+  },
+  {
+    id: "lawn",
+    name: "Lawn Collection",
+    description: "Ideal for Summers",
+    href: "/categories/lawn",
   },
 ];
 

@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import type { Product } from "@/components/ui/ProductCard";
 import { ShopClient } from "./ShopClient";
 
+export const revalidate = 0;
+
 export default async function ShopPage() {
   const dbProducts = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },

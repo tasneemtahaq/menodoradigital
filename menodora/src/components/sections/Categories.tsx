@@ -12,7 +12,7 @@ const categories = [
 
 export function Categories() {
   return (
-    <section className="bg-luxury-black px-6 py-24 md:px-12">
+    <section id="categories" className="bg-luxury-black px-6 py-24 md:px-12">
       <div className="mx-auto max-w-7xl">
         {/* Section heading */}
         <motion.div
