@@ -49,11 +49,12 @@ useEffect(() => {
         {/* Logo */}
        <Link href="/">
            <Image
-              src="/images/logo.jpg"
+              src="/images/logo.png"
               alt="Menodora Logo"
-              width={120}
-              height={50}
+              width={160}
+              height={100}
               priority
+              loading="eager"
              />
         </Link>
 

@@ -5,17 +5,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
+import { getDeliveryCharge } from "@/lib/delivery";
 
-
-const DELIVERY_NOTE = "Delivery charges will be calculated based on your location and confirmed by our team.";
 
 const checkoutSchema = z
   .object({
     fullName: z.string().min(2, { message: "Please enter your full name" }),
     phone: z.string().min(10, { message: "Please enter a valid phone number" }),
+    area: z.string().min(2, { message: "Please enter your area" }),
+    street: z.string().min(2, { message: "Please enter your street name" }),
     address: z.string().min(10, { message: "Please enter your full address" }),
     city: z.string().min(2, { message: "Please enter your city" }),
-    paymentMethod: z.enum(["cod", "bank", "easypaisa", "jazzcash"], {
+    paymentMethod: z.enum(["cod", "bank", "easypaisa", "jazzcash", "stripe"], {
       message: "Please select a payment method",
     }),
     transactionId: z.string().optional(),
@@ -55,27 +56,73 @@ export default function CheckoutPage() {
     defaultValues: { paymentMethod: "cod" },
   });
 
+  const selectedCity = useWatch({ control, name: "city" });
+const deliveryCharge = getDeliveryCharge(selectedCity || "");
+
   const selectedPaymentMethod = useWatch({ control, name: "paymentMethod" });
   const needsTransactionId =
     selectedPaymentMethod === "easypaisa" || selectedPaymentMethod === "jazzcash";
-  const grandTotal = subtotal;
+  const grandTotal = subtotal + deliveryCharge;
 
   async function onSubmit(data: CheckoutFormValues) {
-  const orderPayload = {
-    fullName: data.fullName,
-    phone: data.phone,
-    address: data.address,
-    city: data.city,
-    paymentMethod: data.paymentMethod,
-    transactionId: data.transactionId,
-    subtotal,
-    items: items.map((item) => ({
-      productId: item.product.id,
-      productName: item.product.name,
-      price: item.product.discountPrice ?? item.product.price,
-      quantity: item.quantity,
-    })),
-  };
+  if (data.paymentMethod === "stripe") {
+    try {
+      const response = await fetch("/api/checkout/stripe-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          phone: data.phone,
+          address: data.address,
+          city: data.city,
+          items: items.map((item) => ({
+            productId: item.product.id,
+            productName: item.product.name,
+            price: item.product.discountPrice ?? item.product.price,
+            quantity: item.quantity,
+          })),
+          subtotal,
+        }),
+      });
+
+      if (!response.ok) {
+        alert("Could not start payment. Please try again.");
+        return;
+      }
+
+      const { url } = await response.json();
+
+      if (url) {
+        window.location.assign(url);
+      }
+
+      return;
+    } catch {
+      alert("Could not connect to the payment server.");
+      return;
+    }
+  }
+
+  
+
+  // ...your existing orderPayload / fetch("/api/orders") code stays below, unchanged, for the other 4 payment methods
+
+ const orderPayload = {
+  fullName: data.fullName,
+  phone: data.phone,
+  address: `${data.street}, ${data.area}, ${data.address}`,
+  city: data.city,
+  paymentMethod: data.paymentMethod,
+  transactionId: data.transactionId,
+  subtotal,
+  deliveryCharge,
+  items: items.map((item) => ({
+    productId: item.product.id,
+    productName: item.product.name,
+    price: item.product.discountPrice ?? item.product.price,
+    quantity: item.quantity,
+  })),
+};
 
   try {
     const response = await fetch("/api/orders", {
@@ -157,6 +204,30 @@ export default function CheckoutPage() {
                     <p className="mt-2 text-xs text-red-500">{errors.phone.message}</p>
                   )}
                 </div>
+                
+                <div>
+  <input
+    {...register("area")}
+    type="text"
+    placeholder="Area (e.g. Gulshan-e-Iqbal, DHA Phase 5)"
+    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+  />
+  {errors.area && (
+    <p className="mt-2 text-xs text-red-500">{errors.area.message}</p>
+  )}
+</div>
+
+<div>
+  <input
+    {...register("street")}
+    type="text"
+    placeholder="Street Name / House No."
+    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+  />
+  {errors.street && (
+    <p className="mt-2 text-xs text-red-500">{errors.street.message}</p>
+  )}
+</div>
 
                 <div>
                   <input
@@ -191,11 +262,12 @@ export default function CheckoutPage() {
               </h2>
               <div className="mt-5 flex flex-col gap-3">
                 {[
-                  { value: "cod", label: "Cash on Delivery" },
-                  { value: "bank", label: "Bank Transfer" },
-                  { value: "easypaisa", label: "EasyPaisa" },
-                  { value: "jazzcash", label: "JazzCash" },
-                ].map((method) => (
+              { value: "cod", label: "Cash on Delivery" },
+              { value: "bank", label: "Bank Transfer" },
+              { value: "easypaisa", label: "EasyPaisa" },
+              { value: "jazzcash", label: "JazzCash" },
+              { value: "stripe", label: "Pay with Card (Stripe)" },
+                 ].map((method) => (
                   <label
                     key={method.value}
                     className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-checked:border-luxury-gold"
@@ -260,7 +332,7 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span>Rs. {subtotal.toLocaleString()}</span>
               </div>
-              <p className="text-xs text-gray-500">{DELIVERY_NOTE}</p>
+             
             </div>
 
             <div className="mt-5 flex justify-between text-base font-semibold text-luxury-white">

@@ -49,13 +49,14 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
     className="relative flex h-125 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-neutral-800 to-neutral-900 cursor-zoom-in"
   >
     {activeImage ? (
-      <Image
-        src={activeImage}
-        alt={product.name}
-        fill
-        className="object-cover"
-      />
-    ) : (
+  <Image
+    src={activeImage}
+    alt={product.name}
+    fill
+    sizes="(max-width: 768px) 100vw, 50vw"
+    className="object-cover"
+  />
+) : (
       <span className="text-lg tracking-widest text-luxury-gold/30 uppercase">
         {product.name}
       </span>
@@ -73,7 +74,7 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
             activeImage === img ? "border-luxury-gold" : "border-transparent"
           )}
         >
-          <Image src={img} alt={`${product.name} ${index + 1}`} fill className="object-cover" />
+          <Image src={img} alt={`${product.name} ${index + 1}`} fill sizes="80px" className="object-cover" />
         </button>
       ))}
     </div>
@@ -90,6 +91,7 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
         src={activeImage}
         alt={product.name}
         fill
+        sizes="100vw"
         className="object-contain"
       />
     </div>

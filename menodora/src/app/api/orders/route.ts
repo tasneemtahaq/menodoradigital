@@ -19,6 +19,7 @@ type OrderRequestBody = {
   transactionId?: string;
   items: OrderItemInput[];
   subtotal: number;
+  deliveryCharge: number;
 };
 
 export async function POST(request: Request) {
@@ -36,18 +37,18 @@ export async function POST(request: Request) {
     const orderNumber = `MNO-${Date.now()}`;
 
     const order = await prisma.order.create({
-      data: {
-        orderNumber,
-        userId: userId || null,
-        fullName: body.fullName,
-        phone: body.phone,
-        address: body.address,
-        city: body.city,
-        paymentMethod: body.paymentMethod,
-        transactionId: body.transactionId || null,
-        subtotal: body.subtotal,
-        deliveryCharge: 0,
-        grandTotal: body.subtotal,
+  data: {
+    orderNumber,
+    userId,
+    fullName: body.fullName,
+    phone: body.phone,
+    address: body.address,
+    city: body.city,
+    paymentMethod: body.paymentMethod,
+    transactionId: body.transactionId || null,
+    subtotal: body.subtotal,
+    deliveryCharge: body.deliveryCharge,
+    grandTotal: body.subtotal + body.deliveryCharge,
         items: {
           create: body.items.map((item) => ({
             productId: item.productId,

@@ -45,10 +45,11 @@ async function handleWishlistClick() {
         <div className="relative h-72 overflow-hidden">
   {product.image1 ? (
     <Image
-      src={product.image1}
-      alt={product.name}
-      fill
-      className="object-cover transition-transform duration-500 group-hover:scale-105"
+       src={product.image1}
+       alt={product.name}
+       fill
+       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+       className="object-cover transition-transform duration-500 group-hover:scale-105"
     />
   ) : (
     <div className="flex h-full items-center justify-center bg-linear-to-br from-neutral-800 to-neutral-900">

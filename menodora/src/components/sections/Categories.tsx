@@ -41,7 +41,7 @@ export function Categories() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <Link
-  href={`/shop?category=${encodeURIComponent(category.id)}`}
+               href={`/shop?category=${encodeURIComponent(category.id)}`}
                 className="group relative flex h-48 items-center justify-center overflow-hidden rounded-xl border border-luxury-gold/20 bg-neutral-900 transition-colors hover:border-luxury-gold"
               >
                 <span className="text-lg font-medium tracking-wide text-luxury-white transition-colors group-hover:text-luxury-gold">

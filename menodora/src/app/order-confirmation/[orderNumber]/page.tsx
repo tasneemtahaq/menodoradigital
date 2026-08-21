@@ -53,12 +53,23 @@ export default async function OrderConfirmationPage({
             ))}
           </div>
 
-          <div className="mt-5 flex justify-between text-base font-semibold text-luxury-white">
-            <span>Total</span>
-            <span className="text-luxury-gold">
-              Rs. {order.grandTotal.toLocaleString()}
-            </span>
-          </div>
+          <div className="mt-5 flex flex-col gap-2 border-t border-white/10 pt-4 text-sm">
+  <div className="flex justify-between text-gray-400">
+    <span>Subtotal</span>
+    <span>Rs. {order.subtotal.toLocaleString()}</span>
+  </div>
+  <div className="flex justify-between text-gray-400">
+    <span>Delivery</span>
+    <span>Rs. {order.deliveryCharge.toLocaleString()}</span>
+  </div>
+  <div className="mt-2 flex justify-between text-base font-semibold text-luxury-white">
+    <span>Total</span>
+    <span className="text-luxury-gold">
+      Rs. {order.grandTotal.toLocaleString()}
+    </span>
+  </div>
+</div>
+          
 
           <div className="mt-6 border-t border-white/10 pt-5 text-sm text-gray-400">
             <p>
