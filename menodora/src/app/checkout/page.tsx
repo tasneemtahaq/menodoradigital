@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 import { uploadImageToCloudinary } from "@/lib/cloudinary";
 import { useState } from "react";
 
-
 const checkoutSchema = z
   .object({
     fullName: z.string().min(2, { message: "Please enter your full name" }),
@@ -25,41 +24,31 @@ const checkoutSchema = z
     transactionId: z.string().optional(),
     paymentReceiptUrl: z.string().optional(),
   })
-  .superRefine((data, ctx) => {
-    const needsManualVerification =
-      data.paymentMethod === "easypaisa" ||
-      data.paymentMethod === "jazzcash" ||
-      data.paymentMethod === "bank";
-
-    if (
-      needsManualVerification &&
-      (!data.transactionId || data.transactionId.trim().length < 4)
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Please enter your transaction ID",
-        path: ["transactionId"],
-      });
+  .refine(
+    (data) => {
+      // Transaction ID is now optional for all manual-verification methods,
+      // since the receipt upload is the primary proof. No hard requirement here.
+      return true;
+    },
+    {
+      message: "Please enter your transaction ID",
+      path: ["transactionId"],
     }
-  });
+  );
 
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
-
-// This function lives OUTSIDE the component, at the top level of the file.
-// That's what keeps Date.now() away from the React Compiler's purity checks.
-
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
   const router = useRouter();
 
   const {
-  register,
-  handleSubmit,
-  control,
-  setValue,
-  formState: { errors, isSubmitting },
-} = useForm<CheckoutFormValues>({
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: { paymentMethod: "cod" },
   });
@@ -68,116 +57,110 @@ export default function CheckoutPage() {
   const deliveryCharge = getDeliveryCharge(selectedCity || "");
 
   const selectedPaymentMethod = useWatch({ control, name: "paymentMethod" });
-  const paymentReceiptUrl = useWatch({ control, name: "paymentReceiptUrl" });
   const needsManualVerification =
     selectedPaymentMethod === "easypaisa" ||
     selectedPaymentMethod === "jazzcash" ||
     selectedPaymentMethod === "bank";
+
+  const paymentReceiptUrl = useWatch({ control, name: "paymentReceiptUrl" });
   const grandTotal = subtotal + deliveryCharge;
   const [isUploadingReceipt, setIsUploadingReceipt] = useState(false);
 
-  async function onSubmit(data: CheckoutFormValues) {
-  if (data.paymentMethod === "stripe") {
+  async function handleReceiptUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingReceipt(true);
     try {
-      const response = await fetch("/api/checkout/stripe-session", {
+      const url = await uploadImageToCloudinary(file);
+      setValue("paymentReceiptUrl", url);
+    } catch {
+      alert("Receipt upload failed. Please try again.");
+    } finally {
+      setIsUploadingReceipt(false);
+    }
+  }
+
+  async function onSubmit(data: CheckoutFormValues) {
+    if (data.paymentMethod === "stripe") {
+      try {
+        const response = await fetch("/api/checkout/stripe-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: data.fullName,
+            phone: data.phone,
+            address: data.address,
+            city: data.city,
+            items: items.map((item) => ({
+              productId: item.product.id,
+              productName: item.product.name,
+              price: item.product.discountPrice ?? item.product.price,
+              quantity: item.quantity,
+            })),
+            subtotal,
+            deliveryCharge,
+          }),
+        });
+
+        if (!response.ok) {
+          alert("Could not start payment. Please try again.");
+          return;
+        }
+
+        const { url } = await response.json();
+
+        if (url) {
+          window.location.assign(url);
+        }
+
+        return;
+      } catch {
+        alert("Could not connect to the payment server.");
+        return;
+      }
+    }
+
+    const orderPayload = {
+      fullName: data.fullName,
+      phone: data.phone,
+      address: data.address,
+      city: data.city,
+      paymentMethod: data.paymentMethod,
+      transactionId: data.transactionId,
+      paymentReceiptUrl: data.paymentReceiptUrl,
+      subtotal,
+      deliveryCharge,
+      items: items.map((item) => ({
+        productId: item.product.id,
+        productName: item.product.name,
+        price: item.product.discountPrice ?? item.product.price,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: data.fullName,
-          phone: data.phone,
-          address: data.address,
-          city: data.city,
-          items: items.map((item) => ({
-            productId: item.product.id,
-            productName: item.product.name,
-            price: item.product.discountPrice ?? item.product.price,
-            quantity: item.quantity,
-          })),
-          subtotal,
-          deliveryCharge,
-        }),
+        body: JSON.stringify(orderPayload),
       });
 
       if (!response.ok) {
-        alert("Could not start payment. Please try again.");
+        const errorData = await response.json();
+        alert(errorData.error || "Something went wrong. Please try again.");
         return;
       }
 
-      const { url } = await response.json();
+      const result = await response.json();
 
-      if (url) {
-        window.location.assign(url);
-      }
-
-      return;
-    } catch {
-      alert("Could not connect to the payment server.");
-      return;
-    }
-  }
-
-  
-
-  // ...your existing orderPayload / fetch("/api/orders") code stays below, unchanged, for the other 4 payment methods
-
- const orderPayload = {
-  fullName: data.fullName,
-  phone: data.phone,
-  area: data.area,
-  street: data.street,
-  address: data.address,
-  city: data.city,
-  paymentMethod: data.paymentMethod,
-  transactionId: data.transactionId,
-  paymentReceiptUrl: data.paymentReceiptUrl,
-  subtotal,
-  deliveryCharge,
-  items: items.map((item) => ({
-    productId: item.product.id,
-    productName: item.product.name,
-    price: item.product.discountPrice ?? item.product.price,
-    quantity: item.quantity,
-  })),
-};
-
-  try {
-    const response = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderPayload),
-    });
-
-    if (!response.ok) {
-      let errorMessage = "Something went wrong while placing your order.";
-
-      try {
-        const errorData = await response.json();
-        errorMessage =
-          errorData?.error ||
-          errorData?.message ||
-          errorData?.details ||
-          errorMessage;
-        console.error("/api/orders error:", errorData);
-      } catch {
-        const text = await response.text().catch(() => "");
-        console.error("/api/orders non-JSON error:", text);
-        if (text) errorMessage = text;
-      }
-
-      alert(errorMessage);
-      return;
-    }
-
-    const result = await response.json();
-
-    clearCart();
+      clearCart();
       router.push(`/order-confirmation/${result.order.orderNumber}`);
-      
-  } catch (error) {
-    console.error("Network error placing order:", error);
-    alert("Could not connect to the server. Please check your internet and try again.");
+    } catch (error) {
+      console.error("Network error placing order:", error);
+      alert("Could not connect to the server. Please check your internet and try again.");
+    }
   }
-}
 
   if (items.length === 0) {
     return (
@@ -191,21 +174,6 @@ export default function CheckoutPage() {
       </main>
     );
   }
-
-  async function handleReceiptUpload(e: React.ChangeEvent<HTMLInputElement>) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  setIsUploadingReceipt(true);
-  try {
-    const url = await uploadImageToCloudinary(file);
-    setValue("paymentReceiptUrl", url);
-  } catch {
-    alert("Receipt upload failed. Please try again.");
-  } finally {
-    setIsUploadingReceipt(false);
-  }
-}
 
   return (
     <main className="min-h-screen bg-luxury-black pt-32 pb-24">
@@ -250,30 +218,30 @@ export default function CheckoutPage() {
                     <p className="mt-2 text-xs text-red-500">{errors.phone.message}</p>
                   )}
                 </div>
-                
-                <div>
-           <input
-             {...register("area")}
-             type="text"
-             placeholder="Area (e.g. Gulshan-e-Iqbal, DHA Phase 5)"
-             className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-            />
-            {errors.area && (
-                <p className="mt-2 text-xs text-red-500">{errors.area.message}</p>
-             )}
-           </div>
 
-           <div>
-            <input
-             {...register("street")}
-             type="text"
-             placeholder="Street Name / House No."
-             className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-            />
-             {errors.street && (
-              <p className="mt-2 text-xs text-red-500">{errors.street.message}</p>
-            )}
-           </div>
+                <div>
+                  <input
+                    {...register("area")}
+                    type="text"
+                    placeholder="Area (e.g. Gulshan-e-Iqbal, DHA Phase 5)"
+                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                  />
+                  {errors.area && (
+                    <p className="mt-2 text-xs text-red-500">{errors.area.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    {...register("street")}
+                    type="text"
+                    placeholder="Street Name / House No."
+                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                  />
+                  {errors.street && (
+                    <p className="mt-2 text-xs text-red-500">{errors.street.message}</p>
+                  )}
+                </div>
 
                 <div>
                   <input
@@ -287,29 +255,29 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
-               <div>
-  <select
-    {...register("city")}
-    defaultValue=""
-    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-  >
-    <option value="" disabled>
-      Select your city
-    </option>
-    <option value="Karachi">Karachi</option>
-    <option value="Lahore">Lahore</option>
-    <option value="Islamabad">Islamabad</option>
-    <option value="Rawalpindi">Rawalpindi</option>
-    <option value="Hyderabad">Hyderabad</option>
-    <option value="Multan">Multan</option>
-    <option value="Peshawar">Peshawar</option>
-    <option value="Quetta">Quetta</option>
-    <option value="Abbottabad">Abbottabad</option>
-  </select>
-  {errors.city && (
-    <p className="mt-2 text-xs text-red-500">{errors.city.message}</p>
-  )}
-</div>
+                <div>
+                  <select
+                    {...register("city")}
+                    defaultValue=""
+                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                  >
+                    <option value="" disabled>
+                      Select your city
+                    </option>
+                    <option value="Karachi">Karachi</option>
+                    <option value="Lahore">Lahore</option>
+                    <option value="Islamabad">Islamabad</option>
+                    <option value="Rawalpindi">Rawalpindi</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Multan">Multan</option>
+                    <option value="Peshawar">Peshawar</option>
+                    <option value="Quetta">Quetta</option>
+                    <option value="Abbottabad">Abbottabad</option>
+                  </select>
+                  {errors.city && (
+                    <p className="mt-2 text-xs text-red-500">{errors.city.message}</p>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -329,69 +297,69 @@ export default function CheckoutPage() {
                   <label
                     key={method.value}
                     className={cn(
-                   "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-checked:border-luxury-gold",
-                    method.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                      "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-[:checked]:border-luxury-gold",
+                      method.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                     )}
                   >
-                 <span className="flex items-center gap-3">
-                  <input
-                   {...register("paymentMethod")}
-                   type="radio"
-                   value={method.value}
-                   disabled={method.disabled}
-                   className="accent-luxury-gold"
-                   />
-                  {method.label}
-                 </span>
-                {method.disabled && (
-                 <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] tracking-wide text-gray-400 uppercase">
-                    Coming Soon
-                 </span>
+                    <span className="flex items-center gap-3">
+                      <input
+                        {...register("paymentMethod")}
+                        type="radio"
+                        value={method.value}
+                        disabled={method.disabled}
+                        className="accent-luxury-gold"
+                      />
+                      {method.label}
+                    </span>
+                    {method.disabled && (
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] tracking-wide text-gray-400 uppercase">
+                        Coming Soon
+                      </span>
                     )}
-                </label>
+                  </label>
                 ))}
               </div>
 
               {needsManualVerification && (
-  <div className="mt-5 rounded-xl border border-luxury-gold/30 bg-luxury-gold/5 p-4">
-    <p className="text-xs text-gray-400">
-      {selectedPaymentMethod === "bank"
-        ? "Please transfer the total amount to our bank account (details will be shown after order confirmation)."
-        : `Please send the total amount to our ${selectedPaymentMethod === "easypaisa" ? "EasyPaisa" : "JazzCash"} account (details will be shown after order confirmation).`}
-    </p>
+                <div className="mt-5 rounded-xl border border-luxury-gold/30 bg-luxury-gold/5 p-4">
+                  <p className="text-xs text-gray-400">
+                    {selectedPaymentMethod === "bank"
+                      ? "Please transfer the total amount to our bank account (details will be shown after order confirmation)."
+                      : `Please send the total amount to our ${selectedPaymentMethod === "easypaisa" ? "EasyPaisa" : "JazzCash"} account (details will be shown after order confirmation).`}
+                  </p>
 
-    <input
-      {...register("transactionId")}
-      type="text"
-      placeholder="Transaction ID (optional)"
-      className="mt-3 w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-    />
-    {errors.transactionId && (
-      <p className="mt-2 text-xs text-red-500">{errors.transactionId.message}</p>
-    )}
+                  <input
+                    {...register("transactionId")}
+                    type="text"
+                    placeholder="Transaction ID (optional)"
+                    className="mt-3 w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                  />
+                  {errors.transactionId && (
+                    <p className="mt-2 text-xs text-red-500">{errors.transactionId.message}</p>
+                  )}
 
-    <label className="mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/20 bg-neutral-900 p-5 text-center hover:border-luxury-gold">
-      <input
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleReceiptUpload}
-      />
-      {isUploadingReceipt ? (
-        <span className="text-xs text-gray-400">Uploading...</span>
-      ) : paymentReceiptUrl ? (
-        <span className="text-xs text-luxury-gold">✓ Receipt uploaded — tap to replace</span>
-      ) : (
-        <span className="text-xs text-gray-500">Upload Payment Receipt Screenshot</span>
-      )}
-    </label>
+                  <label className="mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/20 bg-neutral-900 p-5 text-center hover:border-luxury-gold">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleReceiptUpload}
+                    />
+                    {isUploadingReceipt ? (
+                      <span className="text-xs text-gray-400">Uploading...</span>
+                    ) : paymentReceiptUrl ? (
+                      <span className="text-xs text-luxury-gold">✓ Receipt uploaded — tap to replace</span>
+                    ) : (
+                      <span className="text-xs text-gray-500">Upload Payment Receipt Screenshot</span>
+                    )}
+                  </label>
 
-    <p className="mt-3 text-xs text-luxury-gold">
-      Once your payment is cleared, only then will your parcel be dispatched.
-    </p>
-  </div>
-)}
-          </div>
+                  <p className="mt-3 text-xs text-luxury-gold">
+                    Once your payment is cleared, only then will your parcel be dispatched.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right: order summary */}
@@ -421,7 +389,12 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span>Rs. {subtotal.toLocaleString()}</span>
               </div>
-             
+              <div className="flex justify-between text-gray-400">
+                <span>Delivery</span>
+                <span>
+                  {selectedCity ? `Rs. ${deliveryCharge.toLocaleString()}` : "Select city to calculate"}
+                </span>
+              </div>
             </div>
 
             <div className="mt-5 flex justify-between text-base font-semibold text-luxury-white">
