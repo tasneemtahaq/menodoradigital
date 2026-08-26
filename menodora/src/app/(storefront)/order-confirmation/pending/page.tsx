@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { CheckCircle } from "lucide-react";
 
-export default function PendingConfirmationPage() {
+function PendingConfirmationContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [status, setStatus] = useState<"checking" | "found" | "timeout">("checking");
+  const sessionId = searchParams.get("session_id");
+  const [status, setStatus] = useState<"checking" | "found" | "timeout">(
+    sessionId ? "checking" : "timeout"
+  );
 
   useEffect(() => {
-    const sessionId = searchParams.get("session_id");
-    if (!sessionId) {
-      setStatus("timeout");
-      return;
-    }
+    if (!sessionId) return;
 
     let attempts = 0;
     const interval = setInterval(async () => {
@@ -32,11 +31,10 @@ export default function PendingConfirmationPage() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [searchParams, router]);
+  }, [sessionId, router]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-luxury-black px-6 text-center">
-      <CheckCircle className="h-14 w-14 text-luxury-gold" />
+    <>
       {status === "checking" && (
         <>
           <h1 className="mt-6 text-2xl font-bold text-luxury-white">
@@ -55,6 +53,23 @@ export default function PendingConfirmationPage() {
           </p>
         </>
       )}
+    </>
+  );
+}
+
+export default function PendingConfirmationPage() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center bg-luxury-black px-6 text-center">
+      <CheckCircle className="h-14 w-14 text-luxury-gold" />
+      <Suspense
+        fallback={
+          <h1 className="mt-6 text-2xl font-bold text-luxury-white">
+            Loading...
+          </h1>
+        }
+      >
+        <PendingConfirmationContent />
+      </Suspense>
     </main>
   );
 }
