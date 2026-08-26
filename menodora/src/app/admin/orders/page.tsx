@@ -44,6 +44,16 @@ export default async function AdminOrdersPage() {
                 <p className="text-xs text-gray-500">
                   {order.paymentMethod.toUpperCase()}
                 </p>
+                {order.paymentReceiptUrl && (
+  <a
+    href={order.paymentReceiptUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mt-1 block text-xs text-luxury-gold hover:underline"
+  >
+    View Receipt →
+  </a>
+)}
               </div>
             </div>
 

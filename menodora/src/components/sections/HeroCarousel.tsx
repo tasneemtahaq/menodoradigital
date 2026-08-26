@@ -7,23 +7,20 @@ const heroCards: HeroCardData[] = [
   {
     id: 1,
     image: "/images/11.jpg",
-    category: "lawn",
-    title: "Lawn",
-    
+    category: "Cotton, wash n wear",
+    title: "New Arrival",
   },
   {
     id: 2,
     image: "/images/22.jpg",
-    category: "mixed",
-    title: "Mixed Fabric",
-   
+    category: "Cotton, wash n wear",
+    title: "New Arrival",
   },
   {
     id: 3,
     image: "/images/33.jpg",
-    category: "mixed",
-    title: "Mixed Fabric",
-    
+    category: "Cotton, wash n wear",
+    title: "New Arrival",
   },
 ];
 
@@ -41,7 +38,10 @@ export function HeroCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="relative mx-auto h-105 w-75 md:h-120 md:w-105">
+    <div
+      className="relative mx-auto h-105 w-75 md:h-120 md:w-105"
+      style={{ perspective: "1400px" }}
+    >
       {heroCards.map((card, index) => (
         <HeroCard
           key={card.id}

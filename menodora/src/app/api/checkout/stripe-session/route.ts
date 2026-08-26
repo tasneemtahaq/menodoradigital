@@ -24,6 +24,7 @@ export async function POST(request: Request) {
         address: body.address,
         city: body.city,
         items: JSON.stringify(body.items),
+        deliveryCharge: String(body.deliveryCharge),
       },
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/order-confirmation/pending?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout`,

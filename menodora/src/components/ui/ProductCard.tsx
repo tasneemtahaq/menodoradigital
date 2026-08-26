@@ -119,7 +119,7 @@ async function handleWishlistClick() {
         <p className="mt-1 text-xs text-gray-500">
           {isOutOfStock ? "Currently unavailable" : `${product.stock} pieces left`}
         </p>
-
+        
         <button
           onClick={() => addToCart(product, 1)}
           disabled={isOutOfStock}

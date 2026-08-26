@@ -20,6 +20,7 @@ type OrderRequestBody = {
   items: OrderItemInput[];
   subtotal: number;
   deliveryCharge: number;
+  paymentReceiptUrl?: string;
 };
 
 export async function POST(request: Request) {
@@ -46,6 +47,7 @@ export async function POST(request: Request) {
     city: body.city,
     paymentMethod: body.paymentMethod,
     transactionId: body.transactionId || null,
+    paymentReceiptUrl: body.paymentReceiptUrl || null,
     subtotal: body.subtotal,
     deliveryCharge: body.deliveryCharge,
     grandTotal: body.subtotal + body.deliveryCharge,

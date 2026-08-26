@@ -11,14 +11,16 @@ export function Footer() {
           {/* Brand column */}
           <div>
             <Link href="/">
-               <Image
-                  src="/images/logo.jpg"
-                  alt="Menodora Logo"
-                  width={150}
-                  height={50}
-                  priority
-                 />
-              </Link>
+              <Image
+                src="/images/logo.png"
+                alt="Logo"
+                width={120}
+                height={40}
+                loading="eager"
+                className="h-10 w-auto"
+                style={{ height: "auto" }}
+               />
+            </Link> 
            
             <p className="mt-3 text-sm text-gray-400">
               Premium digital printed Rida fabrics, crafted for those who value timeless luxury.
@@ -115,11 +117,11 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2 text-sm text-gray-400">
                 <Phone className="h-4 w-4 shrink-0 text-luxury-gold" />
-                +92 300 0000000
+                +92 3312287497
               </li>
               <li className="flex items-center gap-2 text-sm text-gray-400">
                 <Mail className="h-4 w-4 shrink-0 text-luxury-gold" />
-                hello@menodora.com
+                menodora.co53@gmail.com
               </li>
             </ul>
           </div>

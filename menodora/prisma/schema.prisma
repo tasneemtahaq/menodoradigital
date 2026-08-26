@@ -28,23 +28,24 @@ model Product {
   updatedAt     DateTime @updatedAt
 }
 model Order {
-  id              String      @id @default(cuid())
-  orderNumber     String      @unique
-  userId          String?
-  user            User?       @relation(fields: [userId], references: [id])
-  fullName        String
-  phone           String
-  address         String
-  city            String
-  paymentMethod   String
-  transactionId   String?
-  status          String      @default("pending")
-  subtotal        Int
-  deliveryCharge  Int
-  grandTotal      Int
-  items           OrderItem[]
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique
+  userId            String?
+  user              User?       @relation(fields: [userId], references: [id])
+  fullName          String
+  phone             String
+  address           String
+  city              String
+  paymentMethod     String
+  transactionId     String?
+  paymentReceiptUrl String?
+  status            String      @default("pending")
+  subtotal          Int
+  deliveryCharge    Int
+  grandTotal        Int
+  items             OrderItem[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 }
 
 model OrderItem {
@@ -77,3 +78,4 @@ model WishlistItem {
 
   @@unique([userId, productId])
 }
+

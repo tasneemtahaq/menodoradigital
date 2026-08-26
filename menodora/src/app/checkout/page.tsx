@@ -6,6 +6,9 @@ import { z } from "zod";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { getDeliveryCharge } from "@/lib/delivery";
+import { cn } from "@/lib/utils";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { useState } from "react";
 
 
 const checkoutSchema = z
@@ -20,21 +23,25 @@ const checkoutSchema = z
       message: "Please select a payment method",
     }),
     transactionId: z.string().optional(),
+    paymentReceiptUrl: z.string().optional(),
   })
-  .refine(
-    (data) => {
-      const needsTransactionId =
-        data.paymentMethod === "easypaisa" || data.paymentMethod === "jazzcash";
-      if (needsTransactionId) {
-        return !!data.transactionId && data.transactionId.length >= 4;
-      }
-      return true;
-    },
-    {
-      message: "Please enter your transaction ID",
-      path: ["transactionId"],
+  .superRefine((data, ctx) => {
+    const needsManualVerification =
+      data.paymentMethod === "easypaisa" ||
+      data.paymentMethod === "jazzcash" ||
+      data.paymentMethod === "bank";
+
+    if (
+      needsManualVerification &&
+      (!data.transactionId || data.transactionId.trim().length < 4)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please enter your transaction ID",
+        path: ["transactionId"],
+      });
     }
-  );
+  });
 
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 
@@ -47,22 +54,27 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<CheckoutFormValues>({
+  register,
+  handleSubmit,
+  control,
+  setValue,
+  formState: { errors, isSubmitting },
+} = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: { paymentMethod: "cod" },
   });
 
   const selectedCity = useWatch({ control, name: "city" });
-const deliveryCharge = getDeliveryCharge(selectedCity || "");
+  const deliveryCharge = getDeliveryCharge(selectedCity || "");
 
   const selectedPaymentMethod = useWatch({ control, name: "paymentMethod" });
-  const needsTransactionId =
-    selectedPaymentMethod === "easypaisa" || selectedPaymentMethod === "jazzcash";
+  const paymentReceiptUrl = useWatch({ control, name: "paymentReceiptUrl" });
+  const needsManualVerification =
+    selectedPaymentMethod === "easypaisa" ||
+    selectedPaymentMethod === "jazzcash" ||
+    selectedPaymentMethod === "bank";
   const grandTotal = subtotal + deliveryCharge;
+  const [isUploadingReceipt, setIsUploadingReceipt] = useState(false);
 
   async function onSubmit(data: CheckoutFormValues) {
   if (data.paymentMethod === "stripe") {
@@ -82,6 +94,7 @@ const deliveryCharge = getDeliveryCharge(selectedCity || "");
             quantity: item.quantity,
           })),
           subtotal,
+          deliveryCharge,
         }),
       });
 
@@ -110,10 +123,13 @@ const deliveryCharge = getDeliveryCharge(selectedCity || "");
  const orderPayload = {
   fullName: data.fullName,
   phone: data.phone,
-  address: `${data.street}, ${data.area}, ${data.address}`,
+  area: data.area,
+  street: data.street,
+  address: data.address,
   city: data.city,
   paymentMethod: data.paymentMethod,
   transactionId: data.transactionId,
+  paymentReceiptUrl: data.paymentReceiptUrl,
   subtotal,
   deliveryCharge,
   items: items.map((item) => ({
@@ -132,8 +148,23 @@ const deliveryCharge = getDeliveryCharge(selectedCity || "");
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      alert(errorData.error || "Something went wrong. Please try again.");
+      let errorMessage = "Something went wrong while placing your order.";
+
+      try {
+        const errorData = await response.json();
+        errorMessage =
+          errorData?.error ||
+          errorData?.message ||
+          errorData?.details ||
+          errorMessage;
+        console.error("/api/orders error:", errorData);
+      } catch {
+        const text = await response.text().catch(() => "");
+        console.error("/api/orders non-JSON error:", text);
+        if (text) errorMessage = text;
+      }
+
+      alert(errorMessage);
       return;
     }
 
@@ -160,6 +191,21 @@ const deliveryCharge = getDeliveryCharge(selectedCity || "");
       </main>
     );
   }
+
+  async function handleReceiptUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  setIsUploadingReceipt(true);
+  try {
+    const url = await uploadImageToCloudinary(file);
+    setValue("paymentReceiptUrl", url);
+  } catch {
+    alert("Receipt upload failed. Please try again.");
+  } finally {
+    setIsUploadingReceipt(false);
+  }
+}
 
   return (
     <main className="min-h-screen bg-luxury-black pt-32 pb-24">
@@ -206,28 +252,28 @@ const deliveryCharge = getDeliveryCharge(selectedCity || "");
                 </div>
                 
                 <div>
-  <input
-    {...register("area")}
-    type="text"
-    placeholder="Area (e.g. Gulshan-e-Iqbal, DHA Phase 5)"
-    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-  />
-  {errors.area && (
-    <p className="mt-2 text-xs text-red-500">{errors.area.message}</p>
-  )}
-</div>
+           <input
+             {...register("area")}
+             type="text"
+             placeholder="Area (e.g. Gulshan-e-Iqbal, DHA Phase 5)"
+             className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+            />
+            {errors.area && (
+                <p className="mt-2 text-xs text-red-500">{errors.area.message}</p>
+             )}
+           </div>
 
-<div>
-  <input
-    {...register("street")}
-    type="text"
-    placeholder="Street Name / House No."
-    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-  />
-  {errors.street && (
-    <p className="mt-2 text-xs text-red-500">{errors.street.message}</p>
-  )}
-</div>
+           <div>
+            <input
+             {...register("street")}
+             type="text"
+             placeholder="Street Name / House No."
+             className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+            />
+             {errors.street && (
+              <p className="mt-2 text-xs text-red-500">{errors.street.message}</p>
+            )}
+           </div>
 
                 <div>
                   <input
@@ -241,17 +287,29 @@ const deliveryCharge = getDeliveryCharge(selectedCity || "");
                   )}
                 </div>
 
-                <div>
-                  <input
-                    {...register("city")}
-                    type="text"
-                    placeholder="City"
-                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-                  />
-                  {errors.city && (
-                    <p className="mt-2 text-xs text-red-500">{errors.city.message}</p>
-                  )}
-                </div>
+               <div>
+  <select
+    {...register("city")}
+    defaultValue=""
+    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+  >
+    <option value="" disabled>
+      Select your city
+    </option>
+    <option value="Karachi">Karachi</option>
+    <option value="Lahore">Lahore</option>
+    <option value="Islamabad">Islamabad</option>
+    <option value="Rawalpindi">Rawalpindi</option>
+    <option value="Hyderabad">Hyderabad</option>
+    <option value="Multan">Multan</option>
+    <option value="Peshawar">Peshawar</option>
+    <option value="Quetta">Quetta</option>
+    <option value="Abbottabad">Abbottabad</option>
+  </select>
+  {errors.city && (
+    <p className="mt-2 text-xs text-red-500">{errors.city.message}</p>
+  )}
+</div>
               </div>
             </div>
 
@@ -262,47 +320,78 @@ const deliveryCharge = getDeliveryCharge(selectedCity || "");
               </h2>
               <div className="mt-5 flex flex-col gap-3">
                 {[
-              { value: "cod", label: "Cash on Delivery" },
-              { value: "bank", label: "Bank Transfer" },
-              { value: "easypaisa", label: "EasyPaisa" },
-              { value: "jazzcash", label: "JazzCash" },
-              { value: "stripe", label: "Pay with Card (Stripe)" },
-                 ].map((method) => (
+                  { value: "cod", label: "Cash on Delivery", disabled: false },
+                  { value: "bank", label: "Bank Transfer", disabled: false },
+                  { value: "easypaisa", label: "EasyPaisa", disabled: false },
+                  { value: "jazzcash", label: "JazzCash", disabled: false },
+                  { value: "stripe", label: "Pay with Card (Stripe)", disabled: true },
+                ].map((method) => (
                   <label
                     key={method.value}
-                    className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-checked:border-luxury-gold"
+                    className={cn(
+                   "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-checked:border-luxury-gold",
+                    method.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                    )}
                   >
-                    <input
-                      {...register("paymentMethod")}
-                      type="radio"
-                      value={method.value}
-                      className="accent-luxury-gold"
-                    />
-                    {method.label}
-                  </label>
+                 <span className="flex items-center gap-3">
+                  <input
+                   {...register("paymentMethod")}
+                   type="radio"
+                   value={method.value}
+                   disabled={method.disabled}
+                   className="accent-luxury-gold"
+                   />
+                  {method.label}
+                 </span>
+                {method.disabled && (
+                 <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] tracking-wide text-gray-400 uppercase">
+                    Coming Soon
+                 </span>
+                    )}
+                </label>
                 ))}
               </div>
 
-              {needsTransactionId && (
-                <div className="mt-5 rounded-xl border border-luxury-gold/30 bg-luxury-gold/5 p-4">
-                  <p className="text-xs text-gray-400">
-                    Please send the total amount to our {selectedPaymentMethod === "easypaisa" ? "EasyPaisa" : "JazzCash"} account
-                    (details will be shown after order confirmation), then enter your transaction ID below.
-                  </p>
-                  <input
-                    {...register("transactionId")}
-                    type="text"
-                    placeholder="Transaction ID"
-                    className="mt-3 w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
-                  />
-                  {errors.transactionId && (
-                    <p className="mt-2 text-xs text-red-500">
-                      {errors.transactionId.message}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
+              {needsManualVerification && (
+  <div className="mt-5 rounded-xl border border-luxury-gold/30 bg-luxury-gold/5 p-4">
+    <p className="text-xs text-gray-400">
+      {selectedPaymentMethod === "bank"
+        ? "Please transfer the total amount to our bank account (details will be shown after order confirmation)."
+        : `Please send the total amount to our ${selectedPaymentMethod === "easypaisa" ? "EasyPaisa" : "JazzCash"} account (details will be shown after order confirmation).`}
+    </p>
+
+    <input
+      {...register("transactionId")}
+      type="text"
+      placeholder="Transaction ID (optional)"
+      className="mt-3 w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+    />
+    {errors.transactionId && (
+      <p className="mt-2 text-xs text-red-500">{errors.transactionId.message}</p>
+    )}
+
+    <label className="mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/20 bg-neutral-900 p-5 text-center hover:border-luxury-gold">
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleReceiptUpload}
+      />
+      {isUploadingReceipt ? (
+        <span className="text-xs text-gray-400">Uploading...</span>
+      ) : paymentReceiptUrl ? (
+        <span className="text-xs text-luxury-gold">✓ Receipt uploaded — tap to replace</span>
+      ) : (
+        <span className="text-xs text-gray-500">Upload Payment Receipt Screenshot</span>
+      )}
+    </label>
+
+    <p className="mt-3 text-xs text-luxury-gold">
+      Once your payment is cleared, only then will your parcel be dispatched.
+    </p>
+  </div>
+)}
+          </div>
           </div>
 
           {/* Right: order summary */}

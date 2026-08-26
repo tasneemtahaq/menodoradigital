@@ -48,15 +48,16 @@ useEffect(() => {
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo */}
        <Link href="/">
-           <Image
-              src="/images/logo.png"
-              alt="Menodora Logo"
-              width={160}
-              height={100}
-              priority
-              loading="eager"
-             />
-        </Link>
+          <Image
+           src="/images/logo.png"
+           alt="Logo"
+           width={120}
+           height={40}
+           loading="eager"
+           className="h-10 w-auto"
+          style={{ height: "auto" }}
+         />
+      </Link>
 
         {/* Nav Links - hidden on mobile for now */}
         <div className="hidden items-center gap-8 md:flex">

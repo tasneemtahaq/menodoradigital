@@ -140,6 +140,9 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
                 {product.careInstructions}
               </p>
             </div>
+            <p className="mt-1 text-xs text-yellow-400">
+             Actual Colors may differ slightly from the images shown
+           </p>
 
             {/* Quantity selector */}
             {!isOutOfStock && (

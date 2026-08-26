@@ -7,7 +7,30 @@ import { HeroCarousel } from "./HeroCarousel";
 export function Hero() {
   return (
     <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-luxury-black px-6 py-32 md:px-12">
+      {/* Base gradient */}
       <div className="absolute inset-0 bg-linear-to-b from-black via-black/95 to-black" />
+
+      {/* Ambient gold glow orbs */}
+      <motion.div
+        className="absolute -left-40 top-1/4 h-96 w-96 rounded-full bg-luxury-gold/10 blur-[120px]"
+        animate={{ opacity: [0.4, 0.7, 0.4], scale: [1, 1.15, 1] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute -right-32 bottom-1/4 h-80 w-80 rounded-full bg-luxury-gold/10 blur-[100px]"
+        animate={{ opacity: [0.5, 0.8, 0.5], scale: [1.1, 1, 1.1] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      />
+
+      {/* Faint grid texture for depth */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(212,175,55,1) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,1) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+        }}
+      />
 
       <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-16 md:grid-cols-2">
         {/* Left: text content */}
@@ -48,20 +71,21 @@ export function Hero() {
           >
             <Link
               href="/shop"
-              className="rounded-full bg-luxury-gold px-8 py-3 text-sm font-semibold tracking-wide text-luxury-black transition-colors hover:bg-luxury-gold-light"
+              className="group relative overflow-hidden rounded-full bg-luxury-gold px-8 py-3 text-sm font-semibold tracking-wide text-luxury-black transition-transform hover:scale-[1.03]"
             >
-              SHOP NOW
+              <span className="relative z-10">SHOP NOW</span>
+              <span className="absolute inset-0 -translate-x-full bg-luxury-gold-light transition-transform duration-500 group-hover:translate-x-0" />
             </Link>
             <Link
               href="/new-arrivals"
-              className="rounded-full border border-luxury-gold px-8 py-3 text-sm font-semibold tracking-wide text-luxury-gold transition-colors hover:bg-luxury-gold hover:text-luxury-black"
+              className="rounded-full border border-luxury-gold px-8 py-3 text-sm font-semibold tracking-wide text-luxury-gold transition-all hover:scale-[1.03] hover:bg-luxury-gold hover:text-luxury-black"
             >
               EXPLORE COLLECTION
             </Link>
           </motion.div>
         </div>
 
-        {/* Right: interactive carousel */}
+        {/* Right: interactive 3D carousel */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
