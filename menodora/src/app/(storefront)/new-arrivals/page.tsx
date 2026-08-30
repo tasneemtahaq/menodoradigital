@@ -4,12 +4,12 @@ import { ProductCard, type Product } from "@/components/ui/ProductCard";
 export const revalidate = 0;
 
 export default async function NewArrivalsPage() {
-  const tenDaysAgo = new Date();
-  tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+  const oneDaysAgo = new Date();
+  oneDaysAgo.setDate(oneDaysAgo.getDate() - 1);
 
   const dbProducts = await prisma.product.findMany({
     where: {
-      createdAt: { gte: tenDaysAgo },
+      createdAt: { gte: oneDaysAgo },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -47,7 +47,7 @@ export default async function NewArrivalsPage() {
           </div>
         ) : (
           <p className="py-20 text-center text-gray-500">
-            No new arrivals in the last 10 days — check back soon.
+            No new arrivals in the last 30 days — check back soon.
           </p>
         )}
       </div>
