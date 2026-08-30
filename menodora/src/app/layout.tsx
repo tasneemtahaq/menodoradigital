@@ -1,33 +1,17 @@
-"use client"
-
+import type { Metadata } from "next";
 import "./globals.css";
-import { usePathname } from "next/navigation";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { CartProvider } from "@/context/CartContext";
-import { WishlistProvider } from "@/context/WishlistContext";
 
-
+export const metadata: Metadata = {
+  title: "Menodora Digital Printed Fabrics",
+  description: "Premium digital printed Rida fabrics — luxury, elegance, and timeless quality, crafted in Pakistan.",
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
-
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
-        <WishlistProvider>
-          <CartProvider>
-            {!isAdminRoute && <Navbar />}
-              {children}
-            {!isAdminRoute && <Footer />}
-          </CartProvider>
-        </WishlistProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
