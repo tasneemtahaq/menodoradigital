@@ -41,7 +41,7 @@ export function Hero() {
             transition={{ duration: 0.6 }}
             className="mb-4 text-sm tracking-[0.3em] text-luxury-gold uppercase"
           >
-            Premium Digital Printed Fabrics
+            Premium Digital Printed Rida Fabrics
           </motion.p>
 
           <motion.h1
@@ -59,7 +59,7 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="mt-6 max-w-lg text-base text-gray-300 md:text-lg"
           >
-            Discover Menodora&apos;s exclusive abaya fabric collections —
+            Discover Menodora&apos;s exclusive Digital Printed Rida collections —
             crafted for those who value timeless luxury.
           </motion.p>
 

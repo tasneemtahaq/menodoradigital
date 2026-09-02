@@ -89,7 +89,7 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
     <div className="relative h-full max-h-[90vh] w-full max-w-3xl">
       <Image
         src={activeImage}
-        alt={product.name}
+        alt={`${product.name} - Digital Printed Rida Fabric | Menodora`}
         fill
         sizes="100vw"
         className="object-contain"

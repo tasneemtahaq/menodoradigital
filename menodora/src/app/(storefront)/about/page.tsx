@@ -1,4 +1,10 @@
 import { Gem, Scissors, Leaf } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us | Menodora Digital Printed Rida Fabrics",
+  description: "Discover the story behind Menodora — premium, limited-edition digital printed Rida fabrics designed and crafted in Karachi, Pakistan.",
+};
 
 const values = [
   {
@@ -28,13 +34,15 @@ export default function AboutPage() {
         <h1 className="text-4xl font-bold text-luxury-white md:text-5xl">
           About Menodora
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-gray-400 md:text-base">
-          Menodora Digital Printed Fabrics was founded with a simple belief: that every
-          Rida deserves to be as thoughtfully made as the woman who wears it. Based in
-          Karachi, Pakistan, we design and digitally print premium fabrics that bring
-          together timeless elegance and modern craftsmanship — in small, limited batches,
-          never mass produced.
-        </p>
+       <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-gray-400 md:text-base">
+        Menodora Digital Printed Fabrics was founded with a simple belief: that every
+        rida and abaya deserves to be as thoughtfully made as the woman who wears it.
+        Based in Karachi, Pakistan, we design and digitally print premium rida fabrics
+        that bring together timeless elegance and modern craftsmanship — in small,
+        limited batches, never mass produced. Each digital printed rida design is
+        released in just four pieces, making every Menodora fabric a genuinely
+        exclusive find.
+       </p>
       </div>
 
       <div className="mx-auto mt-20 grid max-w-5xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:px-12">

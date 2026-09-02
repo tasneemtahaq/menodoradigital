@@ -1,15 +1,21 @@
 import { prisma } from "@/lib/prisma";
 import { ProductCard, type Product } from "@/components/ui/ProductCard";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Arrivals | Menodora Digital Printed Rida Fabrics",
+  description: "Explore our latest premium digital printed Rida fabric designs, freshly added to the Menodora collection.",
+};
 
 export const revalidate = 0;
 
 export default async function NewArrivalsPage() {
-  const oneDaysAgo = new Date();
-  oneDaysAgo.setDate(oneDaysAgo.getDate() - 1);
+  const twentyDaysAgo = new Date();
+  twentyDaysAgo.setDate(twentyDaysAgo.getDate() - 20);
 
   const dbProducts = await prisma.product.findMany({
     where: {
-      createdAt: { gte: oneDaysAgo },
+      createdAt: { gte: twentyDaysAgo },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -47,7 +53,7 @@ export default async function NewArrivalsPage() {
           </div>
         ) : (
           <p className="py-20 text-center text-gray-500">
-            No new arrivals in the last 30 days — check back soon.
+            No new arrivals in the last 20 days — check back soon.
           </p>
         )}
       </div>

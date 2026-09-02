@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import Image from "next/image";
 
 
 
@@ -51,15 +52,27 @@ export default function CartPage() {
                   key={item.product.id}
                   className="flex gap-4 rounded-2xl bg-neutral-900 p-4"
                 >
-                  {/* Image placeholder */}
-                  <Link
+                  {/* Image */}
+                <Link
                     href={`/products/${item.product.id}`}
-                    className="flex h-24 w-24 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-neutral-800 to-neutral-700"
-                  >
-                    <span className="text-center text-[10px] tracking-widest text-luxury-gold/40 uppercase">
-                      {item.product.name}
-                    </span>
-                  </Link>
+                    className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-linear-to-br from-neutral-800 to-neutral-700"
+                >
+                {item.product.image1 ? (
+                 <Image
+                   src={item.product.image1}
+                   alt={item.product.name}
+                   fill
+                   sizes="96px"
+                   className="object-cover"
+                  />
+                  ) : (
+                 <div className="flex h-full items-center justify-center">
+                 <span className="text-center text-[10px] tracking-widest text-luxury-gold/40 uppercase">
+                   {item.product.name}
+                 </span>
+                </div>
+   )}
+              </Link>
 
                   {/* Details */}
                   <div className="flex flex-1 flex-col justify-between">

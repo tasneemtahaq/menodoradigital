@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import type { Product } from "@/components/ui/ProductCard";
 import { ShopClient } from "./ShopClient";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shop All Fabrics | Menodora Digital Printed Fabrics",
+  description: "Browse our full collection of premium digital printed abaya fabrics — Cotton, Lawn, Mixed Fabric, and Embroidered designs, crafted in Pakistan.",
+};
 
 export const revalidate = 0;
 

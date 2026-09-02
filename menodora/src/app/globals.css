@@ -3,6 +3,10 @@
 @import "shadcn/tailwind.css";
 
 
+html, body {
+  overflow-x: hidden;
+}
+
 
 @theme {
   --color-luxury-black: #000000;
