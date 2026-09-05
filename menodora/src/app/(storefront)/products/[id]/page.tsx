@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { ProductDetailClient } from "./ProductDetailClient";
 import type { Metadata } from "next";
-
+import { RelatedProducts } from "@/components/sections/RelatedProducts";
+import type { Product } from "@/components/ui/ProductCard";
 
 export const revalidate = 0;
 
@@ -71,6 +72,24 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const relatedDbProducts = await prisma.product.findMany({
+  where: {
+    category: product.category,
+    id: { not: product.id },
+  },
+  take: 4,
+});
+
+const relatedProducts: Product[] = relatedDbProducts.map((p) => ({
+  id: p.id,
+  name: p.name,
+  category: p.category,
+  price: p.price,
+  discountPrice: p.discountPrice ?? undefined,
+  stock: p.stock,
+  image1: p.image1,
+}));
+
   return (
     <>
       <script
@@ -82,7 +101,8 @@ const breadcrumbJsonLd = {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <ProductDetailClient product={product} />
-    </>
+      <RelatedProducts products={relatedProducts} />
+      </>
   );
 }
 

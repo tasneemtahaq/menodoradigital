@@ -17,10 +17,12 @@ type OrderRequestBody = {
   city: string;
   paymentMethod: string;
   transactionId?: string;
+  paymentReceiptUrl?: string;
   items: OrderItemInput[];
   subtotal: number;
   deliveryCharge: number;
-  paymentReceiptUrl?: string;
+  couponCode?: string | null;
+  discountAmount?: number;
 };
 
 export async function POST(request: Request) {
@@ -50,7 +52,9 @@ export async function POST(request: Request) {
     paymentReceiptUrl: body.paymentReceiptUrl || null,
     subtotal: body.subtotal,
     deliveryCharge: body.deliveryCharge,
-    grandTotal: body.subtotal + body.deliveryCharge,
+    couponCode: body.couponCode || null,
+    discountAmount: body.discountAmount || 0,
+    grandTotal: body.subtotal + body.deliveryCharge - (body.discountAmount || 0), 
         items: {
           create: body.items.map((item) => ({
             productId: item.productId,
@@ -68,7 +72,15 @@ export async function POST(request: Request) {
         where: { id: item.productId },
         data: { stock: { decrement: item.quantity } },
       });
+      
     }
+
+    if (body.couponCode) {
+  await prisma.coupon.update({
+    where: { code: body.couponCode },
+    data: { usedCount: { increment: 1 } },
+  });
+}
 
     await sendOrderNotification({
   orderNumber: order.orderNumber,

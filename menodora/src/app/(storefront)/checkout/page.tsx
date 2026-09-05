@@ -9,6 +9,7 @@ import { getDeliveryCharge } from "@/lib/delivery";
 import { cn } from "@/lib/utils";
 import { uploadImageToCloudinary } from "@/lib/cloudinary";
 import { useState } from "react";
+import { paymentDetails } from "@/lib/paymentDetails";
 
 const checkoutSchema = z
   .object({
@@ -53,6 +54,45 @@ export default function CheckoutPage() {
     defaultValues: { paymentMethod: "cod" },
   });
 
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountAmount: number } | null>(null);
+  const [couponError, setCouponError] = useState("");
+  const [isCheckingCoupon, setIsCheckingCoupon] = useState(false);
+
+  async function handleApplyCoupon() {
+  if (!couponCode.trim()) return;
+  setCouponError("");
+  setIsCheckingCoupon(true);
+
+  try {
+    const response = await fetch("/api/coupons/validate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: couponCode, subtotal }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setCouponError(data.error || "Invalid coupon");
+      setAppliedCoupon(null);
+      return;
+    }
+
+    setAppliedCoupon({ code: data.code, discountAmount: data.discountAmount });
+  } catch {
+    setCouponError("Could not validate coupon. Please try again.");
+  } finally {
+    setIsCheckingCoupon(false);
+  }
+}
+
+function handleRemoveCoupon() {
+  setAppliedCoupon(null);
+  setCouponCode("");
+  setCouponError("");
+}
+
   const selectedCity = useWatch({ control, name: "city" });
   const deliveryCharge = getDeliveryCharge(selectedCity || "");
 
@@ -63,7 +103,8 @@ export default function CheckoutPage() {
     selectedPaymentMethod === "bank";
 
   const paymentReceiptUrl = useWatch({ control, name: "paymentReceiptUrl" });
-  const grandTotal = subtotal + deliveryCharge;
+  const discountAmount = appliedCoupon?.discountAmount || 0;
+  const grandTotal = subtotal + deliveryCharge - discountAmount;
   const [isUploadingReceipt, setIsUploadingReceipt] = useState(false);
 
   async function handleReceiptUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -80,6 +121,8 @@ export default function CheckoutPage() {
       setIsUploadingReceipt(false);
     }
   }
+  
+
 
   async function onSubmit(data: CheckoutFormValues) {
     if (data.paymentMethod === "stripe") {
@@ -131,7 +174,9 @@ export default function CheckoutPage() {
       paymentReceiptUrl: data.paymentReceiptUrl,
       subtotal,
       deliveryCharge,
-      items: items.map((item) => ({
+      couponCode: appliedCoupon?.code || null,
+      discountAmount,
+        items: items.map((item) => ({
         productId: item.product.id,
         productName: item.product.name,
         price: item.product.discountPrice ?? item.product.price,
@@ -174,7 +219,7 @@ export default function CheckoutPage() {
       </main>
     );
   }
-
+  
   return (
     <main className="min-h-screen bg-luxury-black pt-32 pb-24">
       <div className="mx-auto max-w-5xl px-6 md:px-12">
@@ -288,16 +333,16 @@ export default function CheckoutPage() {
               </h2>
               <div className="mt-5 flex flex-col gap-3">
                 {[
-                  { value: "cod", label: "Cash on Delivery", disabled: false },
+                  { value: "cod", label: "Cash on Delivery", disabled: true },
                   { value: "bank", label: "Bank Transfer", disabled: false },
                   { value: "easypaisa", label: "EasyPaisa", disabled: false },
                   { value: "jazzcash", label: "JazzCash", disabled: false },
-                  { value: "stripe", label: "Pay with Card (Stripe)", disabled: true },
+                  { value: "stripe", label: "Pay with Card", disabled: true },
                 ].map((method) => (
                   <label
                     key={method.value}
                     className={cn(
-                      "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-[:checked]:border-luxury-gold",
+                      "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-checked:border-luxury-gold",
                       method.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                     )}
                   >
@@ -322,11 +367,38 @@ export default function CheckoutPage() {
 
               {needsManualVerification && (
                 <div className="mt-5 rounded-xl border border-luxury-gold/30 bg-luxury-gold/5 p-4">
-                  <p className="text-xs text-gray-400">
-                    {selectedPaymentMethod === "bank"
-                      ? "Please transfer the total amount to our bank account (details will be shown after order confirmation)."
-                      : `Please send the total amount to our ${selectedPaymentMethod === "easypaisa" ? "EasyPaisa" : "JazzCash"} account (details will be shown after order confirmation).`}
-                  </p>
+                  <div className="text-xs text-gray-400">
+              {selectedPaymentMethod === "bank" && (
+                <>
+               <p>Please transfer the total amount to:</p>
+               <p className="mt-2 text-sm text-luxury-gold">
+                {paymentDetails.bank.accountTitle}
+               <br />
+                {paymentDetails.bank.bankName} — {paymentDetails.bank.accountNumber}
+              </p>
+            </>
+           )}
+             {selectedPaymentMethod === "easypaisa" && (
+             <>
+             <p>Please send the total amount via EasyPaisa to:</p>
+              <p className="mt-2 text-sm text-luxury-gold">
+               {paymentDetails.easypaisa.accountTitle}
+              <br />
+               {paymentDetails.easypaisa.number}
+              </p>
+             </>
+            )}
+             {selectedPaymentMethod === "jazzcash" && (
+             <>
+             <p>Please send the total amount via JazzCash to:</p>
+             <p className="mt-2 text-sm text-luxury-gold">
+              {paymentDetails.jazzcash.accountTitle}
+             <br />
+             {paymentDetails.jazzcash.number}
+            </p>
+           </>
+          )}
+        </div>
 
                   <input
                     {...register("transactionId")}
@@ -385,17 +457,59 @@ export default function CheckoutPage() {
             </div>
 
             <div className="mt-5 flex flex-col gap-3 border-b border-white/10 pb-5 text-sm">
-              <div className="flex justify-between text-gray-400">
-                <span>Subtotal</span>
-                <span>Rs. {subtotal.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-gray-400">
-                <span>Delivery</span>
-                <span>
-                  {selectedCity ? `Rs. ${deliveryCharge.toLocaleString()}` : "Select city to calculate"}
-                </span>
-              </div>
+             <div className="flex justify-between text-gray-400">
+              <span>Subtotal</span>
+               <span>Rs. {subtotal.toLocaleString()}</span>
             </div>
+            <div className="flex justify-between text-gray-400">
+             <span>Delivery</span>
+              <span>
+               {selectedCity ? `Rs. ${deliveryCharge.toLocaleString()}` : "Select city to calculate"}
+              </span>
+            </div>
+              {appliedCoupon && (
+                <div className="flex justify-between text-green-500">
+                 <span>Coupon ({appliedCoupon.code})</span>
+                  <span>− Rs. {discountAmount.toLocaleString()}</span>
+                </div>
+                 )}
+                </div>
+
+                <div className="border-b border-white/10 pb-5">
+                  {appliedCoupon ? (
+                <div className="flex items-center justify-between rounded-xl border border-green-500/30 bg-green-500/5 p-3">
+                <span className="text-sm text-green-500">
+                  &quot;{appliedCoupon.code}&quot; applied
+                </span>
+                <button
+                  type="button"
+                  onClick={handleRemoveCoupon}
+                  className="text-xs text-gray-400 hover:text-white"
+                 >
+                   Remove
+                </button>
+                </div>
+                   ) : (
+                  <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    placeholder="Coupon code"
+                     className="flex-1 rounded-xl border border-white/10 bg-neutral-800 px-4 py-2.5 text-sm text-luxury-white uppercase focus:border-luxury-gold focus:outline-none"
+                     />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={isCheckingCoupon}
+                   className="rounded-xl border border-luxury-gold px-4 py-2.5 text-sm text-luxury-gold transition-colors hover:bg-luxury-gold hover:text-luxury-black disabled:opacity-50"
+                    >
+                {isCheckingCoupon ? "..." : "Apply"}
+              </button>
+            </div>
+            )}
+           {couponError && <p className="mt-2 text-xs text-red-500">{couponError}</p>}
+          </div>
 
             <div className="mt-5 flex justify-between text-base font-semibold text-luxury-white">
               <span>Total</span>

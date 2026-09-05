@@ -39,6 +39,8 @@ model Order {
   paymentMethod     String
   transactionId     String?
   paymentReceiptUrl String?
+  couponCode        String?
+  discountAmount    Int         @default(0)
   status            String      @default("pending")
   subtotal          Int
   deliveryCharge    Int
@@ -58,15 +60,17 @@ model OrderItem {
   quantity    Int
 }
 model User {
-  id           String        @id @default(cuid())
-  fullName     String
-  email        String        @unique
-  passwordHash String
-  phone        String?
-  orders       Order[]
-  wishlist     WishlistItem[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id                  String        @id @default(cuid())
+  fullName            String
+  email               String        @unique
+  passwordHash        String
+  phone               String?
+  resetToken          String?
+  resetTokenExpiresAt DateTime?
+  orders              Order[]
+  wishlist            WishlistItem[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 }
 
 model WishlistItem {
@@ -79,3 +83,16 @@ model WishlistItem {
   @@unique([userId, productId])
 }
 
+model Coupon {
+  id             String    @id @default(cuid())
+  code           String    @unique
+  discountType   String
+  discountValue  Int
+  minOrderAmount Int       @default(0)
+  maxUses        Int?
+  usedCount      Int       @default(0)
+  isActive       Boolean   @default(true)
+  expiresAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}

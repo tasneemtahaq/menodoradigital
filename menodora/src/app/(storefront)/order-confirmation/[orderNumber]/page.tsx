@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { paymentDetails } from "@/lib/paymentDetails";
 
 export default async function OrderConfirmationPage({
   params,
@@ -76,10 +77,34 @@ export default async function OrderConfirmationPage({
               <span className="text-gray-500">Shipping to:</span>{" "}
               {order.address}, {order.city}
             </p>
-            <p className="mt-1">
-              <span className="text-gray-500">Payment method:</span>{" "}
-              {order.paymentMethod}
-            </p>
+            {(order.paymentMethod === "bank" || order.paymentMethod === "easypaisa" || order.paymentMethod === "jazzcash") && order.status === "pending" && (
+           <div className="mt-4 rounded-xl border border-luxury-gold/30 bg-luxury-gold/5 p-4">
+             <p className="text-xs text-gray-400">Complete your payment to:</p>
+             <p className="mt-2 text-sm text-luxury-gold">
+            {order.paymentMethod === "bank" && (
+           <>
+          {paymentDetails.bank.accountTitle}
+           <br />
+          {paymentDetails.bank.bankName} — {paymentDetails.bank.accountNumber}
+           </>
+          )}
+            {order.paymentMethod === "easypaisa" && (
+           <>
+          {paymentDetails.easypaisa.accountTitle}
+          <br />
+          {paymentDetails.easypaisa.number}
+        </>
+      )}
+      {order.paymentMethod === "jazzcash" && (
+        <>
+          {paymentDetails.jazzcash.accountTitle}
+          <br />
+          {paymentDetails.jazzcash.number}
+        </>
+      )}
+    </p>
+  </div>
+)}
             <p className="mt-1">
               <span className="text-gray-500">Status:</span> {order.status}
             </p>

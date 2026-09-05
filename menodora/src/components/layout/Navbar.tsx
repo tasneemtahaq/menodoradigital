@@ -40,11 +40,11 @@ useEffect(() => {
 
   return (
     <nav
-      className={cn(
-        "fixed top-0 left-0 z-50 w-full px-6 py-4 transition-colors duration-300 md:px-12",
-        isScrolled ? "bg-luxury-black shadow-lg" : "bg-transparent"
+       className={cn(
+        "fixed top-0 left-0 z-50 w-full px-6 py-4 backdrop-blur-md transition-colors duration-300 md:px-12",
+         isScrolled ? "bg-luxury-black/80 shadow-lg" : "bg-black/20"
       )}
-    >
+      >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo */}
        <Link href="/">

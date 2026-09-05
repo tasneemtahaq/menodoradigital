@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { ProductCard, type Product } from "@/components/ui/ProductCard";
 
-export const revalidate = 0; // Revalidate every 60 seconds 
+export const revalidate = 0; 
 
 export async function FeaturedProducts() {
   const dbProducts = await prisma.product.findMany({
