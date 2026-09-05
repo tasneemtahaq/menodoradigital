@@ -1,15 +1,15 @@
 export const paymentDetails = {
   bank: {
-    accountTitle: "Menodora Digital Printed Fabrics",
-    accountNumber: "your-real-bank-account-number-here",
-    bankName: "your-bank-name-here",
+    accountTitle: "Tasneem Taha",
+    accountNumber: "PKBAHL1227098100084501",
+    bankName: "Bank Al Habib Limited",
   },
   easypaisa: {
-    accountTitle: "Menodora Digital Printed Fabrics",
-    number: "0331 2287497",
+    accountTitle: "Taha Saifuddin",
+    number: "0333 2287497",
   },
   jazzcash: {
-    accountTitle: "Menodora Digital Printed Fabrics",
-    number: "0331 2287497",
+    accountTitle: "Taha Saifuddin",
+    number: "0333 2287497",
   },
 };
