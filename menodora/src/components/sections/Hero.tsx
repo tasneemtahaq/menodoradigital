@@ -8,7 +8,7 @@ export function Hero() {
   return (
     <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-luxury-black px-6 py-32 md:px-12">
       {/* Base gradient */}
-      <div className="absolute inset-0 bg-linear-to-b from-black via-black/95 to-black" />
+      <div className="absolute inset-0 bg-linear-to-b from-yellow-50 via-brown/10 to-brown/15" />
 
       {/* Ambient gold glow orbs */}
       <motion.div

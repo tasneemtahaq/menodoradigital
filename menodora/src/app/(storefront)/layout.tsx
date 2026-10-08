@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { PromoBanner } from "@/components/layout/PromoBanner";
+import { GoldLeafDecoration } from "@/components/layout/GoldLeafDecoration";
 
 export default function StorefrontLayout({
   children,
@@ -12,10 +13,15 @@ export default function StorefrontLayout({
   return (
     <WishlistProvider>
       <CartProvider>
-        <Navbar />
-        <PromoBanner />
-        {children}
-        <Footer />
+        <div className="gold-dust-bg relative">
+          <GoldLeafDecoration />
+          <div className="relative z-10">
+            <Navbar />
+            <PromoBanner />
+            {children}
+            <Footer />
+          </div>
+        </div>
       </CartProvider>
     </WishlistProvider>
   );
