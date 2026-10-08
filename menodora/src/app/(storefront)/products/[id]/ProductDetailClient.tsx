@@ -39,14 +39,14 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
   
 
   return (
-    <main className="min-h-screen bg-luxury-black pt-32 pb-24">
+    <main className="min-h-screen bg-transparent pt-32 pb-24">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           {/* Image gallery placeholder */}
           <div>
   <div
     onClick={() => activeImage && setIsZoomOpen(true)}
-    className="relative flex h-125 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-neutral-800 to-neutral-900 cursor-zoom-in"
+    className="relative flex h-125 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-luxury-sand to-luxury-tan/50 cursor-zoom-in"
   >
     {activeImage ? (
   <Image
@@ -57,7 +57,7 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
     className="object-cover"
   />
 ) : (
-      <span className="text-lg tracking-widest text-luxury-gold/30 uppercase">
+      <span className="text-lg tracking-widest text-luxury-gold-dark/30 uppercase">
         {product.name}
       </span>
     )}
@@ -100,43 +100,43 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
 
           {/* Product info */}
           <div>
-            <p className="text-xs tracking-wide text-gray-400 uppercase">
+            <p className="text-xs tracking-wide text-luxury-text/70 uppercase">
               {product.category}
             </p>
-            <h1 className="mt-2 text-3xl font-bold text-luxury-white md:text-4xl">
+            <h1 className="mt-2 text-3xl font-bold text-luxury-text md:text-4xl">
               {product.name}
             </h1>
 
             <div className="mt-4 flex items-center gap-3">
               {hasDiscount ? (
                 <>
-                  <span className="text-2xl font-bold text-luxury-gold">
+                  <span className="text-2xl font-bold text-luxury-gold-dark">
                     Rs. {product.discountPrice?.toLocaleString()}
                   </span>
-                  <span className="text-lg text-gray-500 line-through">
+                  <span className="text-lg text-luxury-text/60 line-through">
                     Rs. {product.price.toLocaleString()}
                   </span>
                 </>
               ) : (
-                <span className="text-2xl font-bold text-luxury-gold">
+                <span className="text-2xl font-bold text-luxury-gold-dark">
                   Rs. {product.price.toLocaleString()}
                 </span>
               )}
             </div>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-luxury-text/60">
               {isOutOfStock ? "Currently unavailable" : `${product.stock} pieces left`}
             </p>
 
-            <p className="mt-6 text-sm leading-relaxed text-gray-300">
+            <p className="mt-6 text-sm leading-relaxed text-luxury-text/80">
               {product.description}
             </p>
 
-            <div className="mt-6 border-t border-white/10 pt-6">
-              <h3 className="text-sm font-semibold tracking-wide text-luxury-white uppercase">
+            <div className="mt-6 border-t border-luxury-tan/40 pt-6">
+              <h3 className="text-sm font-semibold tracking-wide text-luxury-text uppercase">
                 Care Instructions
               </h3>
-              <p className="mt-2 text-sm text-gray-400">
+              <p className="mt-2 text-sm text-luxury-text/70">
                 {product.careInstructions}
               </p>
             </div>
@@ -147,23 +147,23 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
             {/* Quantity selector */}
             {!isOutOfStock && (
               <div className="mt-8 flex items-center gap-4">
-                <span className="text-sm text-gray-400">Quantity</span>
-                <div className="flex items-center rounded-full border border-white/10">
+                <span className="text-sm text-luxury-text/70">Quantity</span>
+                <div className="flex items-center rounded-full border border-luxury-tan/40">
                   <button
                     onClick={decreaseQuantity}
                     disabled={quantity <= 1}
-                    className="flex h-9 w-9 items-center justify-center text-luxury-white disabled:text-gray-600"
+                    className="flex h-9 w-9 items-center justify-center text-luxury-text disabled:text-luxury-text/50"
                     aria-label="Decrease quantity"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
-                  <span className="w-8 text-center text-sm text-luxury-white">
+                  <span className="w-8 text-center text-sm text-luxury-text">
                     {quantity}
                   </span>
                   <button
                     onClick={increaseQuantity}
                     disabled={quantity >= stock}
-                    className="flex h-9 w-9 items-center justify-center text-luxury-white disabled:text-gray-600"
+                    className="flex h-9 w-9 items-center justify-center text-luxury-text disabled:text-luxury-text/50"
                     aria-label="Increase quantity"
                   >
                     <Plus className="h-4 w-4" />
@@ -191,8 +191,8 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
               className={cn(
                 "mt-8 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-semibold transition-colors sm:w-auto sm:px-12",
                 isOutOfStock
-                  ? "cursor-not-allowed bg-neutral-700 text-gray-400"
-                  : "bg-luxury-gold text-luxury-black hover:bg-luxury-gold-light"
+                  ? "cursor-not-allowed bg-neutral-700 text-luxury-text/70"
+                  : "bg-gold-gradient text-luxury-black hover:bg-luxury-gold-light"
               )}
             >
               <ShoppingBag className="h-4 w-4" />

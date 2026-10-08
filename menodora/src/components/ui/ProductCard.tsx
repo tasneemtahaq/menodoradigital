@@ -18,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
   const hasDiscount = product.discountPrice !== undefined;
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-neutral-900">
+    <div className="group relative overflow-hidden rounded-2xl bg-white-60">
       {/* Image area */}
       <Link href={`/products/${product.id}`} className="block">
         <div className="relative h-72 overflow-hidden">
@@ -31,15 +31,15 @@ export function ProductCard({ product }: { product: Product }) {
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full items-center justify-center bg-linear-to-br from-neutral-800 to-neutral-900">
-              <span className="text-sm tracking-widest text-luxury-gold/30 uppercase">
+            <div className="flex h-full items-center justify-center bg-linear-to-br from-luxury-sand to-luxury-tan/50">
+              <span className="text-sm tracking-widest text-luxury-gold-dark/30 uppercase">
                 {product.name} 
               </span>
             </div>
           )}
 
           {hasDiscount && (
-            <span className="absolute top-3 left-3 rounded-full bg-luxury-gold px-3 py-1 text-xs font-semibold text-luxury-black">
+            <span className="absolute top-3 left-3 rounded-full bg-gold-gradient px-3 py-1 text-xs font-semibold text-luxury-black">
               SALE
             </span>
           )}
@@ -56,31 +56,31 @@ export function ProductCard({ product }: { product: Product }) {
 
       {/* Info */}
       <div className="p-5">
-        <p className="text-xs tracking-wide text-gray-400 uppercase">
+        <p className="text-xs tracking-wide text-luxury-text/70 uppercase">
           {product.category}
         </p>
-        <h3 className="mt-1 text-base font-semibold text-luxury-white">
+        <h3 className="mt-1 text-base font-semibold text-luxury-text">
           {product.name}
         </h3>
 
         <div className="mt-2 flex items-center gap-2">
           {hasDiscount ? (
             <>
-              <span className="text-lg font-bold text-luxury-gold">
+              <span className="text-lg font-bold text-luxury-gold-dark">
                 Rs. {product.discountPrice?.toLocaleString()}
               </span>
-              <span className="text-sm text-gray-500 line-through">
+              <span className="text-sm text-luxury-text/60 line-through">
                 Rs. {product.price.toLocaleString()}
               </span>
             </>
           ) : (
-            <span className="text-lg font-bold text-luxury-gold">
+            <span className="text-lg font-bold text-luxury-gold-dark">
               Rs. {product.price.toLocaleString()}
             </span>
           )}
         </div>
 
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-luxury-text/60">
           {isOutOfStock ? "Currently unavailable" : `${product.stock} pieces left`}
         </p>
 

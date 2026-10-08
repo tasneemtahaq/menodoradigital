@@ -31,16 +31,16 @@ export default async function NewArrivalsPage() {
   }));
 
   return (
-    <main className="min-h-screen bg-luxury-black pt-32 pb-24">
+    <main className="min-h-screen bg-transparent pt-32 pb-24">
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="mb-10 text-center">
-          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold uppercase">
+          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold-dark uppercase">
             Just In
           </p>
-          <h1 className="text-4xl font-bold text-luxury-white md:text-5xl">
+          <h1 className="text-4xl font-bold text-luxury-text md:text-5xl">
             New Arrivals
           </h1>
-          <p className="mt-3 text-sm text-gray-400">
+          <p className="mt-3 text-sm text-luxury-text/70">
             Our latest fabric designs, freshly added.
           </p>
         </div>
@@ -52,7 +52,7 @@ export default async function NewArrivalsPage() {
             ))}
           </div>
         ) : (
-          <p className="py-20 text-center text-gray-500">
+          <p className="py-20 text-center text-luxury-text/60">
             No new arrivals in the last 20 days — check back soon.
           </p>
         )}

@@ -16,8 +16,8 @@ export function AddToCartButton({ product }: { product: Product }) {
       className={cn(
         "mt-4 flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold transition-colors",
         isOutOfStock
-          ? "cursor-not-allowed bg-neutral-700 text-gray-400"
-          : "bg-luxury-gold text-luxury-black hover:bg-luxury-gold-light"
+          ? "cursor-not-allowed bg-neutral-700 text-luxury-text/70"
+          : "bg-gold-gradient text-luxury-black hover:bg-luxury-gold-light"
       )}
     >
       <ShoppingBag className="h-4 w-4" />

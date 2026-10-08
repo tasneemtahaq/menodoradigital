@@ -43,8 +43,8 @@ function StarRating({ rating }: { rating: number }) {
           key={index}
           className={`h-4 w-4 ${
             index < rating
-              ? "fill-luxury-gold text-luxury-gold"
-              : "text-gray-600"
+              ? "fill-luxury-gold text-luxury-gold-dark"
+              : "text-luxury-text/50"
           }`}
         />
       ))}
@@ -54,7 +54,7 @@ function StarRating({ rating }: { rating: number }) {
 
 export function Reviews() {
   return (
-    <section className="bg-luxury-white px-6 py-24 md:px-12">
+    <section className="bg-luxury-sand/50 px-6 py-24 md:px-12">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -63,7 +63,7 @@ export function Reviews() {
           transition={{ duration: 0.6 }}
           className="mb-14 text-center"
         >
-          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold uppercase">
+          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold-dark uppercase">
             Testimonials
           </p>
           <h2 className="text-3xl font-bold text-luxury-text md:text-4xl">
@@ -89,7 +89,7 @@ export function Reviews() {
                 <p className="text-sm font-semibold text-luxury-text">
                   {review.name}
                 </p>
-                <p className="text-xs text-gray-500">{review.location}</p>
+                <p className="text-xs text-luxury-text/60">{review.location}</p>
               </div>
             </motion.div>
           ))}

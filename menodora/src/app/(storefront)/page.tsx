@@ -9,7 +9,7 @@ export const revalidate = 0; // Revalidate every 60 seconds
 
 export default function Home() {
   return (
-    <main className="min-h-screen pt-20  bg-luxury-black">
+    <main className="min-h-screen pt-20  bg-transparent">
       <Navbar />
       <Hero />
       <Categories />

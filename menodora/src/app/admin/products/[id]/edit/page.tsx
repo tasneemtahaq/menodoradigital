@@ -32,6 +32,9 @@ export default async function EditProductPage({
             stock: product.stock,
             description: product.description,
             careInstructions: product.careInstructions,
+            image1: product.image1 ?? undefined,
+            image2: product.image2 ?? undefined,
+            image3: product.image3 ?? undefined,
           }}
         />
       </div>

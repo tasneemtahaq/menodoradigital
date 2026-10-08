@@ -47,10 +47,10 @@ function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-sm rounded-2xl border border-white/10 bg-neutral-900 p-8"
+      className="w-full max-w-sm rounded-2xl border border-luxury-tan/40 bg-white-60 p-8"
     >
-      <h1 className="text-2xl font-bold text-luxury-white">Welcome Back</h1>
-      <p className="mt-1 text-sm text-gray-500">Log in to your account.</p>
+      <h1 className="text-2xl font-bold text-luxury-text">Welcome Back</h1>
+      <p className="mt-1 text-sm text-luxury-text/60">Log in to your account.</p>
 
       <div className="mt-6 flex flex-col gap-4">
         <input
@@ -58,10 +58,10 @@ function LoginForm() {
           type="email"
           placeholder="Email"
           required
-          className="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+          className="rounded-xl border border-luxury-tan/40 bg-white-70 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
         />
         <div className="text-right">
-          <Link href="/forgot-password" className="text-xs text-gray-500 hover:text-luxury-gold">
+          <Link href="/forgot-password" className="text-xs text-luxury-text/60 hover:text-luxury-gold-dark">
             Forgot password?
           </Link>
         </div>
@@ -70,7 +70,7 @@ function LoginForm() {
           type="password"
           placeholder="Password"
           required
-          className="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+          className="rounded-xl border border-luxury-tan/40 bg-white-70 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
         />
       </div>
 
@@ -84,20 +84,20 @@ function LoginForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-6 w-full rounded-xl bg-luxury-gold py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
+        className="mt-6 w-full rounded-xl bg-gold-gradient py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
       >
         {isSubmitting ? "Logging in..." : "Log In"}
       </button>
 
       <div className="my-5 flex items-center gap-3">
         <div className="h-px flex-1 bg-white/10" />
-        <span className="text-xs text-gray-500">OR</span>
+        <span className="text-xs text-luxury-text/60">OR</span>
         <div className="h-px flex-1 bg-white/10" />
       </div>
 
       <a
         href="/api/auth/google"
-        className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-neutral-950 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+        className="flex w-full items-center justify-center gap-3 rounded-xl border border-luxury-tan/40 bg-white-70 py-3 text-sm font-medium text-white transition-colors hover:bg-luxury-sand/60"
       >
         <svg className="h-4 w-4" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -108,9 +108,9 @@ function LoginForm() {
         Continue with Google
       </a>
 
-      <p className="mt-4 text-center text-sm text-gray-500">
+      <p className="mt-4 text-center text-sm text-luxury-text/60">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-luxury-gold hover:underline">
+        <Link href="/register" className="text-luxury-gold-dark hover:underline">
           Create one
         </Link>
       </p>
@@ -120,11 +120,11 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-luxury-black px-6 pt-32 pb-24">
+    <main className="flex min-h-screen items-center justify-center bg-transparent px-6 pt-32 pb-24">
       <Suspense
         fallback={
-          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-neutral-900 p-8">
-            <p className="text-sm text-gray-500">Loading...</p>
+          <div className="w-full max-w-sm rounded-2xl border border-luxury-tan/40 bg-white-60 p-8">
+            <p className="text-sm text-luxury-text/60">Loading...</p>
           </div>
         }
       >

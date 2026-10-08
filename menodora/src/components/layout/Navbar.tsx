@@ -42,7 +42,7 @@ useEffect(() => {
     <nav
        className={cn(
         "fixed top-0 left-0 z-50 w-full px-6 py-4 backdrop-blur-md transition-colors duration-300 md:px-12",
-         isScrolled ? "bg-luxury-black/80 shadow-lg" : "bg-black/20"
+         isScrolled ? "bg-transparent/80 shadow-lg" : "bg-black/10"
       )}
       >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
@@ -61,19 +61,19 @@ useEffect(() => {
 
         {/* Nav Links - hidden on mobile for now */}
         <div className="hidden items-center gap-8 md:flex">
-          <Link href="/shop" className="text-sm text-luxury-white hover:text-luxury-gold">
+          <Link href="/shop" className="text-sm text-luxury-text hover:text-luxury-gold-dark">
             Shop
           </Link>
-          <Link href="/#categories" className="text-sm text-luxury-white hover:text-luxury-gold">
+          <Link href="/#categories" className="text-sm text-luxury-text hover:text-luxury-gold-dark">
             Categories
           </Link>
-          <Link href="/new-arrivals" className="text-sm text-luxury-white hover:text-luxury-gold">
+          <Link href="/new-arrivals" className="text-sm text-luxury-text hover:text-luxury-gold-dark">
             New Arrivals
           </Link>
-          <Link href="/about" className="text-sm text-luxury-white hover:text-luxury-gold">
+          <Link href="/about" className="text-sm text-luxury-text hover:text-luxury-gold-dark">
             About
           </Link>
-          <Link href="/contact" className="text-sm text-luxury-white hover:text-luxury-gold">
+          <Link href="/contact" className="text-sm text-luxury-text hover:text-luxury-gold-dark">
             Contact
           </Link>
         </div>
@@ -81,26 +81,26 @@ useEffect(() => {
         {/* Icons */}
         <div className="flex items-center gap-5">
           <button onClick={() => setIsSearchOpen(true)} aria-label="Search">
-          <Search className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+          <Search className="h-5 w-5 cursor-pointer text-luxury-text hover:text-luxury-gold-dark" />
           </button>
           <Link href={isLoggedIn ? "/account" : "/login"} className="relative">
-           <Heart className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+           <Heart className="h-5 w-5 cursor-pointer text-luxury-text hover:text-luxury-gold-dark" />
              {wishlistCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-luxury-gold text-[10px] font-bold text-luxury-black">
+              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold-gradient text-[10px] font-bold text-luxury-black">
                 {wishlistCount}
               </span>
               )}
           </Link>
           <Link href="/cart" className="relative">
-          <ShoppingBag className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+          <ShoppingBag className="h-5 w-5 cursor-pointer text-luxury-text hover:text-luxury-gold-dark" />
               {totalItems > 0 && (
-                 <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-luxury-gold text-[10px] font-bold text-luxury-black">
+                 <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold-gradient text-[10px] font-bold text-luxury-black">
                    {totalItems}
                  </span>
                    )}
             </Link>
           <Link href={isLoggedIn ? "/account" : "/login"}>
-               <User className="h-5 w-5 cursor-pointer text-luxury-white hover:text-luxury-gold" />
+               <User className="h-5 w-5 cursor-pointer text-luxury-text hover:text-luxury-gold-dark" />
          </Link>
         </div>
       </div>

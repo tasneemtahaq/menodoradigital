@@ -37,18 +37,18 @@ function PendingConfirmationContent() {
     <>
       {status === "checking" && (
         <>
-          <h1 className="mt-6 text-2xl font-bold text-luxury-white">
+          <h1 className="mt-6 text-2xl font-bold text-luxury-text">
             Confirming your payment...
           </h1>
-          <p className="mt-2 text-sm text-gray-400">This will only take a moment.</p>
+          <p className="mt-2 text-sm text-luxury-text/70">This will only take a moment.</p>
         </>
       )}
       {status === "timeout" && (
         <>
-          <h1 className="mt-6 text-2xl font-bold text-luxury-white">
+          <h1 className="mt-6 text-2xl font-bold text-luxury-text">
             Payment received
           </h1>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-luxury-text/70">
             Your order is being processed. Check your email or contact us if you don&apos;t see a confirmation soon.
           </p>
         </>
@@ -59,11 +59,11 @@ function PendingConfirmationContent() {
 
 export default function PendingConfirmationPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-luxury-black px-6 text-center">
-      <CheckCircle className="h-14 w-14 text-luxury-gold" />
+    <main className="flex min-h-screen flex-col items-center justify-center bg-transparent px-6 text-center">
+      <CheckCircle className="h-14 w-14 text-luxury-gold-dark" />
       <Suspense
         fallback={
-          <h1 className="mt-6 text-2xl font-bold text-luxury-white">
+          <h1 className="mt-6 text-2xl font-bold text-luxury-text">
             Loading...
           </h1>
         }

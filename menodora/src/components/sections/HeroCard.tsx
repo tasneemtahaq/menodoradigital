@@ -116,12 +116,12 @@ export function HeroCard({
         />
       )}
 
-      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/10 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-tan /80 via-black/10 to-transparent" />
 
       {(card.category || card.title) && (
-        <div className="absolute right-0 bottom-0 left-0 border-t border-white/10 bg-black/20 p-5 backdrop-blur-sm">
+        <div className="absolute right-0 bottom-0 left-0 border-t border-luxury-tan/40 bg-black/20 p-5 backdrop-blur-sm">
           {card.category && (
-            <p className="text-[11px] tracking-[0.25em] text-luxury-gold uppercase">
+            <p className="text-[11px] tracking-[0.25em] text-luxury-gold-dark uppercase">
               {card.category}
             </p>
           )}

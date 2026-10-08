@@ -28,7 +28,7 @@ export function Newsletter() {
   }
 
   return (
-    <section className="bg-luxury-white px-6 py-24 md:px-12">
+    <section className="bg-luxury-sand/50 px-6 py-24 md:px-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -36,14 +36,14 @@ export function Newsletter() {
         transition={{ duration: 0.6 }}
         className="mx-auto flex max-w-2xl flex-col items-center text-center"
       >
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-luxury-black">
-          <Mail className="h-6 w-6 text-luxury-gold" />
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-luxury-sand">
+          <Mail className="h-6 w-6 text-luxury-gold-dark" />
         </div>
 
         <h2 className="text-3xl font-bold text-luxury-text md:text-4xl">
           Join The Menodora Circle
         </h2>
-        <p className="mt-3 text-sm text-gray-500 md:text-base">
+        <p className="mt-3 text-sm text-luxury-text/60 md:text-base">
           Be the first to know about new collections, limited drops, and exclusive offers.
         </p>
 
@@ -67,7 +67,7 @@ export function Newsletter() {
           </div>
           <button
             type="submit"
-            className="rounded-full bg-luxury-black px-8 py-3 text-sm font-semibold text-luxury-gold transition-colors hover:bg-neutral-800"
+            className="rounded-full bg-transparent px-8 py-3 text-sm font-semibold text-luxury-gold-dark transition-colors hover:bg-luxury-sand/60"
           >
             Subscribe
           </button>

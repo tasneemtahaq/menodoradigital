@@ -209,11 +209,11 @@ function handleRemoveCoupon() {
 
   if (items.length === 0) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-luxury-black px-6 pt-32 pb-24 text-center">
-        <h1 className="text-2xl font-bold text-luxury-white">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-transparent px-6 pt-32 pb-24 text-center">
+        <h1 className="text-2xl font-bold text-luxury-text">
           Your cart is empty
         </h1>
-        <p className="mt-2 text-sm text-gray-400">
+        <p className="mt-2 text-sm text-luxury-text/70">
           Add something to your cart before checking out.
         </p>
       </main>
@@ -221,9 +221,9 @@ function handleRemoveCoupon() {
   }
   
   return (
-    <main className="min-h-screen bg-luxury-black pt-32 pb-24">
+    <main className="min-h-screen bg-transparent pt-32 pb-24">
       <div className="mx-auto max-w-5xl px-6 md:px-12">
-        <h1 className="mb-10 text-3xl font-bold text-luxury-white md:text-4xl">
+        <h1 className="mb-10 text-3xl font-bold text-luxury-text md:text-4xl">
           Checkout
         </h1>
 
@@ -235,8 +235,8 @@ function handleRemoveCoupon() {
           {/* Left: shipping + payment */}
           <div className="flex flex-col gap-8 lg:col-span-2">
             {/* Shipping info */}
-            <div className="rounded-2xl bg-neutral-900 p-6">
-              <h2 className="text-lg font-semibold text-luxury-white">
+            <div className="rounded-2xl bg-white-60 p-6">
+              <h2 className="text-lg font-semibold text-luxury-text">
                 Shipping Information
               </h2>
               <div className="mt-5 flex flex-col gap-4">
@@ -245,7 +245,7 @@ function handleRemoveCoupon() {
                     {...register("fullName")}
                     type="text"
                     placeholder="Full Name"
-                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                    className="w-full rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
                   />
                   {errors.fullName && (
                     <p className="mt-2 text-xs text-red-500">{errors.fullName.message}</p>
@@ -257,7 +257,7 @@ function handleRemoveCoupon() {
                     {...register("phone")}
                     type="tel"
                     placeholder="Phone Number (e.g. 03001234567)"
-                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                    className="w-full rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
                   />
                   {errors.phone && (
                     <p className="mt-2 text-xs text-red-500">{errors.phone.message}</p>
@@ -269,7 +269,7 @@ function handleRemoveCoupon() {
                     {...register("area")}
                     type="text"
                     placeholder="Area (e.g. Gulshan-e-Iqbal, DHA Phase 5)"
-                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                    className="w-full rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
                   />
                   {errors.area && (
                     <p className="mt-2 text-xs text-red-500">{errors.area.message}</p>
@@ -281,7 +281,7 @@ function handleRemoveCoupon() {
                     {...register("street")}
                     type="text"
                     placeholder="Street Name / House No."
-                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                    className="w-full rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
                   />
                   {errors.street && (
                     <p className="mt-2 text-xs text-red-500">{errors.street.message}</p>
@@ -293,7 +293,7 @@ function handleRemoveCoupon() {
                     {...register("address")}
                     type="text"
                     placeholder="Street Address"
-                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                    className="w-full rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
                   />
                   {errors.address && (
                     <p className="mt-2 text-xs text-red-500">{errors.address.message}</p>
@@ -304,7 +304,7 @@ function handleRemoveCoupon() {
                   <select
                     {...register("city")}
                     defaultValue=""
-                    className="w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                    className="w-full rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
                   >
                     <option value="" disabled>
                       Select your city
@@ -327,8 +327,8 @@ function handleRemoveCoupon() {
             </div>
 
             {/* Payment method */}
-            <div className="rounded-2xl bg-neutral-900 p-6">
-              <h2 className="text-lg font-semibold text-luxury-white">
+            <div className="rounded-2xl bg-white-60 p-6">
+              <h2 className="text-lg font-semibold text-luxury-text">
                 Payment Method
               </h2>
               <div className="mt-5 flex flex-col gap-3">
@@ -342,7 +342,7 @@ function handleRemoveCoupon() {
                   <label
                     key={method.value}
                     className={cn(
-                      "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-neutral-800 p-4 text-sm text-luxury-white has-checked:border-luxury-gold",
+                      "flex items-center justify-between gap-3 rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 p-4 text-sm text-luxury-text has-checked:border-luxury-gold",
                       method.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                     )}
                   >
@@ -357,7 +357,7 @@ function handleRemoveCoupon() {
                       {method.label}
                     </span>
                     {method.disabled && (
-                      <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] tracking-wide text-gray-400 uppercase">
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] tracking-wide text-luxury-text/70 uppercase">
                         Coming Soon
                       </span>
                     )}
@@ -367,11 +367,11 @@ function handleRemoveCoupon() {
 
               {needsManualVerification && (
                 <div className="mt-5 rounded-xl border border-luxury-gold/30 bg-luxury-gold/5 p-4">
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-luxury-text/70">
               {selectedPaymentMethod === "bank" && (
                 <>
                <p>Please transfer the total amount to:</p>
-               <p className="mt-2 text-sm text-luxury-gold">
+               <p className="mt-2 text-sm text-luxury-gold-dark">
                 {paymentDetails.bank.accountTitle}
                <br />
                 {paymentDetails.bank.bankName} — {paymentDetails.bank.accountNumber}
@@ -381,7 +381,7 @@ function handleRemoveCoupon() {
              {selectedPaymentMethod === "easypaisa" && (
              <>
              <p>Please send the total amount via EasyPaisa to:</p>
-              <p className="mt-2 text-sm text-luxury-gold">
+              <p className="mt-2 text-sm text-luxury-gold-dark">
                {paymentDetails.easypaisa.accountTitle}
               <br />
                {paymentDetails.easypaisa.number}
@@ -391,7 +391,7 @@ function handleRemoveCoupon() {
              {selectedPaymentMethod === "jazzcash" && (
              <>
              <p>Please send the total amount via JazzCash to:</p>
-             <p className="mt-2 text-sm text-luxury-gold">
+             <p className="mt-2 text-sm text-luxury-gold-dark">
               {paymentDetails.jazzcash.accountTitle}
              <br />
              {paymentDetails.jazzcash.number}
@@ -404,13 +404,13 @@ function handleRemoveCoupon() {
                     {...register("transactionId")}
                     type="text"
                     placeholder="Transaction ID (optional)"
-                    className="mt-3 w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-sm text-luxury-white focus:border-luxury-gold focus:outline-none"
+                    className="mt-3 w-full rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
                   />
                   {errors.transactionId && (
                     <p className="mt-2 text-xs text-red-500">{errors.transactionId.message}</p>
                   )}
 
-                  <label className="mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/20 bg-neutral-900 p-5 text-center hover:border-luxury-gold">
+                  <label className="mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-luxury-tan/60 bg-white-60 p-5 text-center hover:border-luxury-gold">
                     <input
                       type="file"
                       accept="image/*"
@@ -418,15 +418,15 @@ function handleRemoveCoupon() {
                       onChange={handleReceiptUpload}
                     />
                     {isUploadingReceipt ? (
-                      <span className="text-xs text-gray-400">Uploading...</span>
+                      <span className="text-xs text-luxury-text/70">Uploading...</span>
                     ) : paymentReceiptUrl ? (
-                      <span className="text-xs text-luxury-gold">✓ Receipt uploaded — tap to replace</span>
+                      <span className="text-xs text-luxury-gold-dark">✓ Receipt uploaded — tap to replace</span>
                     ) : (
-                      <span className="text-xs text-gray-500">Upload Payment Receipt Screenshot</span>
+                      <span className="text-xs text-luxury-text/60">Upload Payment Receipt Screenshot</span>
                     )}
                   </label>
 
-                  <p className="mt-3 text-xs text-luxury-gold">
+                  <p className="mt-3 text-xs text-luxury-gold-dark">
                     Once your payment is cleared, only then will your parcel be dispatched.
                   </p>
                 </div>
@@ -435,20 +435,20 @@ function handleRemoveCoupon() {
           </div>
 
           {/* Right: order summary */}
-          <div className="h-fit rounded-2xl bg-neutral-900 p-6">
-            <h2 className="text-lg font-semibold text-luxury-white">
+          <div className="h-fit rounded-2xl bg-white-60 p-6">
+            <h2 className="text-lg font-semibold text-luxury-text">
               Order Summary
             </h2>
 
-            <div className="mt-5 flex flex-col gap-3 border-b border-white/10 pb-5">
+            <div className="mt-5 flex flex-col gap-3 border-b border-luxury-tan/40 pb-5">
               {items.map((item) => {
                 const price = item.product.discountPrice ?? item.product.price;
                 return (
                   <div key={item.product.id} className="flex justify-between text-sm">
-                    <span className="text-gray-400">
+                    <span className="text-luxury-text/70">
                       {item.product.name} × {item.quantity}
                     </span>
-                    <span className="text-luxury-white">
+                    <span className="text-luxury-text">
                       Rs. {(price * item.quantity).toLocaleString()}
                     </span>
                   </div>
@@ -456,12 +456,12 @@ function handleRemoveCoupon() {
               })}
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 border-b border-white/10 pb-5 text-sm">
-             <div className="flex justify-between text-gray-400">
+            <div className="mt-5 flex flex-col gap-3 border-b border-luxury-tan/40 pb-5 text-sm">
+             <div className="flex justify-between text-luxury-text/70">
               <span>Subtotal</span>
                <span>Rs. {subtotal.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between text-gray-400">
+            <div className="flex justify-between text-luxury-text/70">
              <span>Delivery</span>
               <span>
                {selectedCity ? `Rs. ${deliveryCharge.toLocaleString()}` : "Select city to calculate"}
@@ -475,7 +475,7 @@ function handleRemoveCoupon() {
                  )}
                 </div>
 
-                <div className="border-b border-white/10 pb-5">
+                <div className="border-b border-luxury-tan/40 pb-5">
                   {appliedCoupon ? (
                 <div className="flex items-center justify-between rounded-xl border border-green-500/30 bg-green-500/5 p-3">
                 <span className="text-sm text-green-500">
@@ -484,7 +484,7 @@ function handleRemoveCoupon() {
                 <button
                   type="button"
                   onClick={handleRemoveCoupon}
-                  className="text-xs text-gray-400 hover:text-white"
+                  className="text-xs text-luxury-text/70 hover:text-white"
                  >
                    Remove
                 </button>
@@ -496,13 +496,13 @@ function handleRemoveCoupon() {
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
                     placeholder="Coupon code"
-                     className="flex-1 rounded-xl border border-white/10 bg-neutral-800 px-4 py-2.5 text-sm text-luxury-white uppercase focus:border-luxury-gold focus:outline-none"
+                     className="flex-1 rounded-xl border border-luxury-tan/40 bg-luxury-sand/60 px-4 py-2.5 text-sm text-luxury-text uppercase focus:border-luxury-gold focus:outline-none"
                      />
                   <button
                     type="button"
                     onClick={handleApplyCoupon}
                     disabled={isCheckingCoupon}
-                   className="rounded-xl border border-luxury-gold px-4 py-2.5 text-sm text-luxury-gold transition-colors hover:bg-luxury-gold hover:text-luxury-black disabled:opacity-50"
+                   className="rounded-xl border border-luxury-gold px-4 py-2.5 text-sm text-luxury-gold-dark transition-colors hover:bg-luxury-gold hover:text-luxury-black disabled:opacity-50"
                     >
                 {isCheckingCoupon ? "..." : "Apply"}
               </button>
@@ -511,9 +511,9 @@ function handleRemoveCoupon() {
            {couponError && <p className="mt-2 text-xs text-red-500">{couponError}</p>}
           </div>
 
-            <div className="mt-5 flex justify-between text-base font-semibold text-luxury-white">
+            <div className="mt-5 flex justify-between text-base font-semibold text-luxury-text">
               <span>Total</span>
-              <span className="text-luxury-gold">
+              <span className="text-luxury-gold-dark">
                 Rs. {grandTotal.toLocaleString()}
               </span>
             </div>
@@ -521,7 +521,7 @@ function handleRemoveCoupon() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="mt-6 w-full rounded-full bg-luxury-gold py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
+              className="mt-6 w-full rounded-full bg-gold-gradient py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
             >
               {isSubmitting ? "Placing Order..." : "Place Order"}
             </button>

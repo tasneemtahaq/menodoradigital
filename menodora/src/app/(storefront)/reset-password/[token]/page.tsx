@@ -38,12 +38,12 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-luxury-black px-6 pt-32 pb-24">
+    <main className="flex min-h-screen items-center justify-center bg-transparent px-6 pt-32 pb-24">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-2xl border border-white/10 bg-neutral-900 p-8"
+        className="w-full max-w-sm rounded-2xl border border-luxury-tan/40 bg-white-60 p-8"
       >
-        <h1 className="text-2xl font-bold text-luxury-white">Set New Password</h1>
+        <h1 className="text-2xl font-bold text-luxury-text">Set New Password</h1>
 
         <input
           type="password"
@@ -52,7 +52,7 @@ export default function ResetPasswordPage() {
           placeholder="New password"
           required
           minLength={6}
-          className="mt-6 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+          className="mt-6 w-full rounded-xl border border-luxury-tan/40 bg-white-70 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
         />
 
         {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
@@ -60,7 +60,7 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-6 w-full rounded-xl bg-luxury-gold py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
+          className="mt-6 w-full rounded-xl bg-gold-gradient py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
         >
           {isSubmitting ? "Saving..." : "Reset Password"}
         </button>

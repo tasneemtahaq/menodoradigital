@@ -9,7 +9,7 @@ export function PromoBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-20 left-0 z-40 flex w-full items-center justify-center bg-luxury-gold px-10 py-2.5 text-center text-xs font-semibold text-luxury-black sm:text-sm">
+    <div className="fixed top-20 left-0 z-40 flex w-full items-center justify-center bg-gold-gradient px-10 py-2.5 text-center text-xs font-semibold text-luxury-black sm:text-sm">
       <p>
         Get 5% off on your order for Limited Time— use code{" "}
         <span className="font-bold tracking-wide">WELCOMENEW</span> at checkout

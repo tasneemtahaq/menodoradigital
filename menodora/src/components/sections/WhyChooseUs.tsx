@@ -39,7 +39,7 @@ const features: Feature[] = [
 
 export function WhyChooseUs() {
   return (
-    <section className="bg-luxury-black px-6 py-24 md:px-12">
+    <section className="bg-transparent px-6 py-24 md:px-12">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -48,10 +48,10 @@ export function WhyChooseUs() {
           transition={{ duration: 0.6 }}
           className="mb-14 text-center"
         >
-          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold uppercase">
+          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold-dark uppercase">
             The Menodora Promise
           </p>
-          <h2 className="text-3xl font-bold text-luxury-white md:text-4xl">
+          <h2 className="text-3xl font-bold text-luxury-text md:text-4xl">
             Why Choose Us
           </h2>
         </motion.div>
@@ -69,12 +69,12 @@ export function WhyChooseUs() {
                 className="flex flex-col items-center text-center"
               >
                 <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-luxury-gold/30 bg-luxury-gold/5">
-                  <Icon className="h-7 w-7 text-luxury-gold" />
+                  <Icon className="h-7 w-7 text-luxury-gold-dark" />
                 </div>
-                <h3 className="text-lg font-semibold text-luxury-white">
+                <h3 className="text-lg font-semibold text-luxury-text">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-sm text-gray-400">
+                <p className="mt-2 text-sm text-luxury-text/70">
                   {feature.description}
                 </p>
               </motion.div>

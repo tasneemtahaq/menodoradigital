@@ -39,6 +39,9 @@ export async function PATCH(
         stock: body.stock,
         description: body.description,
         careInstructions: body.careInstructions,
+        image1: body.image1 || null,
+        image2: body.image2 || null,
+        image3: body.image3 || null,
       },
     });
 

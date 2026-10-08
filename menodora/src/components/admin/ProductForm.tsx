@@ -70,6 +70,10 @@ async function handleImageUpload(
   }
 }
 
+function handleImageRemove(slot: 1 | 2 | 3) {
+  setValue(`image${slot}` as "image1" | "image2" | "image3", "");
+}
+
   async function onSubmit(data: ProductFormValues) {
     setServerError(null);
 
@@ -190,36 +194,53 @@ async function handleImageUpload(
   <label className="text-sm text-gray-400">Product Images (up to 3)</label>
   <div className="mt-2 grid grid-cols-3 gap-4">
     {[1, 2, 3].map((slot) => {
-      const currentUrl =
-        slot === 1 ? image1 : slot === 2 ? image2 : image3;
-      const isUploading = uploadingSlot === slot;
+  const currentUrl = slot === 1 ? image1 : slot === 2 ? image2 : image3;
+  const isUploading = uploadingSlot === slot;
 
-      return (
-        <label
-          key={slot}
-          className="relative flex aspect-square cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/20 bg-neutral-950 hover:border-luxury-gold"
-        >
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handleImageUpload(e, slot as 1 | 2 | 3)}
+  return (
+    <label
+      key={slot}
+      className="relative flex aspect-square cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/20 bg-neutral-950 hover:border-luxury-gold"
+    >
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => handleImageUpload(e, slot as 1 | 2 | 3)}
+      />
+      {isUploading ? (
+        <span className="text-xs text-gray-400">Uploading...</span>
+      ) : currentUrl ? (
+        <>
+          <Image
+            src={currentUrl}
+            alt={`Product image ${slot}`}
+            fill
+            sizes="150px"
+            className="object-cover"
           />
-          {isUploading ? (
-            <span className="text-xs text-gray-400">Uploading...</span>
-          ) : currentUrl ? (
-            <Image
-              src={currentUrl}
-              alt={`Product image ${slot}`}
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <span className="text-xs text-gray-500">+ Add Image</span>
-          )}
-        </label>
-      );
-    })}
+          <span className="absolute right-0 bottom-0 left-0 bg-black/60 py-1 text-center text-[10px] text-white">
+            Click to replace
+          </span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleImageRemove(slot as 1 | 2 | 3);
+            }}
+            aria-label={`Remove image ${slot}`}
+            className="absolute top-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-sm text-white hover:bg-red-600"
+          >
+            ×
+          </button>
+        </>
+      ) : (
+        <span className="text-xs text-gray-500">+ Add Image</span>
+      )}
+    </label>
+  );
+})}
   </div>
 </div>
 

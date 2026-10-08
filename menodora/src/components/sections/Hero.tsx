@@ -6,9 +6,9 @@ import { HeroCarousel } from "./HeroCarousel";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-luxury-black px-6 py-32 md:px-12">
+    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-luxury-sand/50 px-6 py-32 md:px-12">
       {/* Base gradient */}
-      <div className="absolute inset-0 bg-linear-to-b from-yellow-50 via-brown/10 to-brown/15" />
+      
 
       {/* Ambient gold glow orbs */}
       <motion.div
@@ -39,7 +39,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-4 text-sm tracking-[0.3em] text-luxury-gold uppercase"
+            className="mb-4 text-sm tracking-[0.3em] text-luxury-gold-dark uppercase"
           >
             Premium Digital Printed Rida Fabrics
           </motion.p>
@@ -48,7 +48,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15 }}
-            className="max-w-xl text-4xl leading-tight font-bold text-luxury-white md:text-6xl"
+            className="max-w-xl text-4xl leading-tight font-bold text-luxury-text md:text-6xl"
           >
             Where Elegance Meets Every Thread
           </motion.h1>
@@ -57,7 +57,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-6 max-w-lg text-base text-gray-300 md:text-lg"
+            className="mt-6 max-w-lg text-base text-luxury-text/80 md:text-lg"
           >
             Discover Menodora&apos;s exclusive Digital Printed Rida collections —
             crafted for those who value timeless luxury.
@@ -71,14 +71,14 @@ export function Hero() {
           >
             <Link
               href="/shop"
-              className="group relative overflow-hidden rounded-full bg-luxury-gold px-8 py-3 text-sm font-semibold tracking-wide text-luxury-black transition-transform hover:scale-[1.03]"
+              className="group relative overflow-hidden rounded-full bg-gold-gradient px-8 py-3 text-sm font-semibold tracking-wide text-luxury-black transition-transform hover:scale-[1.03]"
             >
               <span className="relative z-10">SHOP NOW</span>
               <span className="absolute inset-0 -translate-x-full bg-luxury-gold-light transition-transform duration-500 group-hover:translate-x-0" />
             </Link>
             <Link
               href="/new-arrivals"
-              className="rounded-full border border-luxury-gold px-8 py-3 text-sm font-semibold tracking-wide text-luxury-gold transition-all hover:scale-[1.03] hover:bg-luxury-gold hover:text-luxury-black"
+              className="rounded-full border border-luxury-gold px-8 py-3 text-sm font-semibold tracking-wide text-luxury-gold-dark transition-all hover:scale-[1.03] hover:bg-luxury-gold hover:text-luxury-black"
             >
               EXPLORE COLLECTION
             </Link>

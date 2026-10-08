@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export function Footer() {
   return (
-    <footer className="bg-luxury-black px-6 pt-16 pb-8 md:px-12">
+    <footer className="bg-luxury-sand px-6 pt-16 pb-8 md:px-12">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand column */}
@@ -22,7 +22,7 @@ export function Footer() {
                />
             </Link> 
            
-            <p className="mt-3 text-sm text-gray-400">
+            <p className="mt-3 text-sm text-luxury-text/70">
               Premium digital printed Rida fabrics, crafted for those who value timeless luxury.
             </p>
             <div className="mt-5 flex gap-4">
@@ -31,7 +31,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-luxury-gold/30 text-luxury-gold transition-colors hover:bg-luxury-gold hover:text-luxury-black"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-luxury-gold/30 text-luxury-gold-dark transition-colors hover:bg-luxury-gold hover:text-luxury-black"
               >
                 <InstagramIcon className="h-4 w-4" />
               </a>
@@ -40,7 +40,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-luxury-gold/30 text-luxury-gold transition-colors hover:bg-luxury-gold hover:text-luxury-black"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-luxury-gold/30 text-luxury-gold-dark transition-colors hover:bg-luxury-gold hover:text-luxury-black"
               >
                 <FacebookIcon className="h-4 w-4" />
               </a>
@@ -49,27 +49,27 @@ export function Footer() {
 
           {/* Quick links */}
           <div>
-            <h4 className="text-sm font-semibold tracking-wide text-luxury-white uppercase">
+            <h4 className="text-sm font-semibold tracking-wide text-luxury-text uppercase">
               Quick Links
             </h4>
             <ul className="mt-4 space-y-3">
               <li>
-                <Link href="/shop" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/shop" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   Shop
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/categories" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   Categories
                 </Link>
               </li>
               <li>
-                <Link href="/new-arrivals" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/new-arrivals" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   New Arrivals
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/about" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   About Us
                 </Link>
               </li>
@@ -78,27 +78,27 @@ export function Footer() {
 
           {/* Customer service */}
           <div>
-            <h4 className="text-sm font-semibold tracking-wide text-luxury-white uppercase">
+            <h4 className="text-sm font-semibold tracking-wide text-luxury-text uppercase">
               Customer Service
             </h4>
             <ul className="mt-4 space-y-3">
               <li>
-                <Link href="/contact" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/contact" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/orders" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/orders" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   Track Order
                 </Link>
               </li>
               <li>
-                <Link href="/account" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/account" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   My Account
                 </Link>
               </li>
               <li>
-                <Link href="/wishlist" className="text-sm text-gray-400 hover:text-luxury-gold">
+                <Link href="/wishlist" className="text-sm text-luxury-text/70 hover:text-luxury-gold-dark">
                   Wishlist
                 </Link>
               </li>
@@ -107,20 +107,20 @@ export function Footer() {
 
           {/* Contact info */}
           <div>
-            <h4 className="text-sm font-semibold tracking-wide text-luxury-white uppercase">
+            <h4 className="text-sm font-semibold tracking-wide text-luxury-text uppercase">
               Get In Touch
             </h4>
             <ul className="mt-4 space-y-3">
-              <li className="flex items-start gap-2 text-sm text-gray-400">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-luxury-gold" />
+              <li className="flex items-start gap-2 text-sm text-luxury-text/70">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-luxury-gold-dark" />
                 Karachi, Pakistan
               </li>
-              <li className="flex items-center gap-2 text-sm text-gray-400">
-                <Phone className="h-4 w-4 shrink-0 text-luxury-gold" />
+              <li className="flex items-center gap-2 text-sm text-luxury-text/70">
+                <Phone className="h-4 w-4 shrink-0 text-luxury-gold-dark" />
                 +92 3312287497
               </li>
-              <li className="flex items-center gap-2 text-sm text-gray-400">
-                <Mail className="h-4 w-4 shrink-0 text-luxury-gold" />
+              <li className="flex items-center gap-2 text-sm text-luxury-text/70">
+                <Mail className="h-4 w-4 shrink-0 text-luxury-gold-dark" />
                 menodora.co53@gmail.com
               </li>
             </ul>
@@ -128,8 +128,8 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 border-t border-white/10 pt-6 text-center">
-          <p className="text-xs text-gray-500">
+        <div className="mt-14 border-t border-luxury-tan/40 pt-6 text-center">
+          <p className="text-xs text-luxury-text/60">
             © {new Date().getFullYear()} Menodora Digital Printed Fabrics. All rights reserved.
           </p>
         </div>

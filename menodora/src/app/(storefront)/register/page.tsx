@@ -45,13 +45,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-luxury-black px-6 pt-32 pb-24">
+    <main className="flex min-h-screen items-center justify-center bg-transparent px-6 pt-32 pb-24">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-2xl border border-white/10 bg-neutral-900 p-8"
+        className="w-full max-w-sm rounded-2xl border border-luxury-tan/40 bg-white-60 p-8"
       >
-        <h1 className="text-2xl font-bold text-luxury-white">Create Account</h1>
-        <p className="mt-1 text-sm text-gray-500">Join the Menodora circle.</p>
+        <h1 className="text-2xl font-bold text-luxury-text">Create Account</h1>
+        <p className="mt-1 text-sm text-luxury-text/60">Join the Menodora circle.</p>
 
         <div className="mt-6 flex flex-col gap-4">
           <input
@@ -59,20 +59,20 @@ export default function RegisterPage() {
             type="text"
             placeholder="Full Name"
             required
-            className="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+            className="rounded-xl border border-luxury-tan/40 bg-white-70 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
           />
           <input
             name="email"
             type="email"
             placeholder="Email"
             required
-            className="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+            className="rounded-xl border border-luxury-tan/40 bg-white-70 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
           />
           <input
             name="phone"
             type="tel"
             placeholder="Phone (optional)"
-            className="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+            className="rounded-xl border border-luxury-tan/40 bg-white-70 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
           />
           <input
             name="password"
@@ -80,7 +80,7 @@ export default function RegisterPage() {
             placeholder="Password"
             required
             minLength={6}
-            className="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+            className="rounded-xl border border-luxury-tan/40 bg-white-70 px-4 py-3 text-sm text-luxury-text focus:border-luxury-gold focus:outline-none"
           />
         </div>
 
@@ -89,14 +89,14 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-6 w-full rounded-xl bg-luxury-gold py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
+          className="mt-6 w-full rounded-xl bg-gold-gradient py-3 text-sm font-semibold text-luxury-black transition-colors hover:bg-luxury-gold-light disabled:opacity-60"
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </button>
 
-        <p className="mt-4 text-center text-sm text-gray-500">
+        <p className="mt-4 text-center text-sm text-luxury-text/60">
           Already have an account?{" "}
-          <Link href="/login" className="text-luxury-gold hover:underline">
+          <Link href="/login" className="text-luxury-gold-dark hover:underline">
             Log in
           </Link>
         </p>

@@ -15,8 +15,9 @@ html, body {
   --color-luxury-taupe: #9C8270;
   --color-luxury-gold: #B8923F;
   --color-luxury-gold-light: #E8CE8F;
+  --color-luxury-gold-dark: #8A6A22;
 
-  --color-luxury-black: #9C8270;
+  --color-luxury-black: #3D2F24;
   --color-luxury-white: #F7F3EC;
   --color-luxury-text: #5C4A3A;
 }
@@ -52,4 +53,43 @@ html, body {
     radial-gradient(1px 1px at 45% 10%, rgba(184, 146, 63, 0.25) 0%, transparent 100%);
   background-size: 100% 100%;
   background-repeat: no-repeat;
+}
+body {
+  background-color: var(--color-luxury-cream);
+  color: var(--color-luxury-text);
+}
+@layer components {
+  .gold-outline {
+    position: relative;
+  }
+
+  .gold-outline::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: var(--gold-gradient);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .bg-gold-gradient {
+    background-image: var(--gold-gradient);
+  }
+
+  .bg-gold-gradient:hover {
+    filter: brightness(1.08);
+  }
+
+  .gold-line {
+    background-image: var(--gold-gradient);
+  }
 }

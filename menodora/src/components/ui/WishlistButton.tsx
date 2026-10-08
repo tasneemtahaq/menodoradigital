@@ -29,7 +29,7 @@ export function WishlistButton({ productId }: { productId: string }) {
       <Heart
         className={cn(
           "h-4 w-4 transition-colors",
-          isFavorited ? "fill-luxury-gold text-luxury-gold" : "text-white"
+          isFavorited ? "fill-luxury-gold text-luxury-gold-dark" : "text-white"
         )}
       />
     </button>

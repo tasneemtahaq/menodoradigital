@@ -20,10 +20,10 @@ export async function FeaturedProducts() {
 }));
 
   return (
-    <section className="bg-luxury-white px-6 py-24 md:px-12">
+    <section className="bg-luxury-sand/50 px-6 py-24 md:px-12">
       <div className="mx-auto max-w-7xl">
         <div className="mb-14 text-center">
-          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold uppercase">
+          <p className="mb-2 text-sm tracking-[0.3em] text-luxury-gold-dark uppercase">
             Handpicked
           </p>
           <h2 className="text-3xl font-bold text-luxury-text md:text-4xl">
