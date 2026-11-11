@@ -16,7 +16,7 @@ export async function FeaturedProducts() {
   price: p.price,
   discountPrice: p.discountPrice ?? undefined,
   stock: p.stock,
-  image1: p.image1, subCategory: p.subCategory, subCategory: p.subCategory,
+  image1: p.image1, subCategory: p.subCategory,
 }));
 
   return (
