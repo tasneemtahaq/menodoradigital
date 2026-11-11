@@ -133,29 +133,29 @@ function handleImageRemove(slot: 1 | 2 | 3) {
           <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>
         )}
       </div>
-
-    <div>
-  <label className="text-sm text-gray-400">Category</label>
+      
+<div>
+  <label className="text-sm text-gray-400">Main Category</label>
   <select
-    {...register("category")}
+    {...register("category", { onChange: () => setValue("subCategory", "") })}
     defaultValue=""
     className="mt-1 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
   >
     <option value="" disabled>
-      Select a category
+      Select a main category
     </option>
-    <option value="Cotton">Cotton</option>
-    <option value="Lawn">Lawn</option>
-    <option value="Mixed Fabric">Mixed Fabric</option>
-    <option value="Embroidered">Embroidered</option>
-    <option value="Jewellery">Jewellery</option>
+    {mainCategories.map((category) => (
+      <option key={category} value={category}>
+        {category}
+      </option>
+    ))}
   </select>
   {errors.category && (
     <p className="mt-1 text-xs text-red-500">{errors.category.message}</p>
   )}
 </div>
 
-{selectedCategory === "Jewellery" && (
+{selectedCategory && categoryTree[selectedCategory] && (
   <div>
     <label className="text-sm text-gray-400">Sub-category</label>
     <select
@@ -164,38 +164,16 @@ function handleImageRemove(slot: 1 | 2 | 3) {
       className="mt-1 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
     >
       <option value="" disabled>
-        Choose Bangles or Rings
+        Choose a sub-category
       </option>
-      <option value="Bangles">Bangles</option>
-      <option value="Rings">Rings</option>
+      {categoryTree[selectedCategory].map((sub) => (
+        <option key={sub} value={sub}>
+          {sub}
+        </option>
+      ))}
     </select>
     {errors.subCategory && (
       <p className="mt-1 text-xs text-red-500">{errors.subCategory.message}</p>
-    )}
-  </div>
-)}
-
-{selectedCategory === "Jewellery" && selectedSubCategory === "Bangles" && (
-  <div>
-    <label className="text-sm text-gray-400">Available Sizes</label>
-    <div className="mt-2 flex flex-wrap gap-3">
-      {["2.2", "2.4", "2.6", "2.8"].map((size) => (
-        <label
-          key={size}
-          className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-neutral-950 px-4 py-2 text-sm text-white has-[:checked]:border-luxury-gold"
-        >
-          <input
-            type="checkbox"
-            value={size}
-            {...register("sizes")}
-            className="accent-luxury-gold"
-          />
-          {size}
-        </label>
-      ))}
-    </div>
-    {errors.sizes && (
-      <p className="mt-1 text-xs text-red-500">{errors.sizes.message}</p>
     )}
   </div>
 )}
