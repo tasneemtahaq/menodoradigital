@@ -49,7 +49,7 @@ export default function CartPage() {
 
               return (
                 <div
-                  key={item.product.id}
+                  key={`${item.product.id}-${item.size ?? "none"}`}
                   className="flex gap-4 rounded-2xl bg-white-60 p-4"
                 >
                   {/* Image */}
@@ -85,11 +85,13 @@ export default function CartPage() {
                           {item.product.name}
                         </Link>
                         <p className="text-xs text-luxury-text/60">
-                          {item.product.category}
+                          {item.size && (
+                        <p className="text-xs text-luxury-gold-dark">Size: {item.size}</p>
+                         )}
                         </p>
                       </div>
                       <button
-                        onClick={() => removeFromCart(item.product.id)}
+                        onClick={() => removeFromCart(item.product.id, item.size)}
                         aria-label="Remove item"
                         className="text-luxury-text/60 transition-colors hover:text-red-500"
                       >
@@ -102,7 +104,7 @@ export default function CartPage() {
                       <div className="flex items-center rounded-full border border-luxury-tan/40">
                         <button
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity - 1)
+                            updateQuantity(item.product.id, item.quantity - 1, item.size)
                           }
                           disabled={item.quantity <= 1}
                           className="flex h-7 w-7 items-center justify-center text-luxury-text disabled:text-luxury-text/50"
@@ -115,7 +117,7 @@ export default function CartPage() {
                         </span>
                         <button
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1)
+                            updateQuantity(item.product.id, item.quantity + 1, item.size)
                           }
                           disabled={item.quantity >= item.product.stock}
                           className="flex h-7 w-7 items-center justify-center text-luxury-text disabled:text-luxury-text/50"

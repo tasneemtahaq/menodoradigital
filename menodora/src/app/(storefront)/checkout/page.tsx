@@ -139,7 +139,7 @@ function handleRemoveCoupon() {
               productId: item.product.id,
               productName: item.product.name,
               price: item.product.discountPrice ?? item.product.price,
-              quantity: item.quantity,
+              quantity: item.quantity, size: item.size, 
             })),
             subtotal,
             deliveryCharge,
@@ -180,7 +180,7 @@ function handleRemoveCoupon() {
         productId: item.product.id,
         productName: item.product.name,
         price: item.product.discountPrice ?? item.product.price,
-        quantity: item.quantity,
+        quantity: item.quantity, size: item.size, 
       })),
     };
 
@@ -444,9 +444,9 @@ function handleRemoveCoupon() {
               {items.map((item) => {
                 const price = item.product.discountPrice ?? item.product.price;
                 return (
-                  <div key={item.product.id} className="flex justify-between text-sm">
+                  <div key={`${item.product.id}-${item.size ?? "none"}`} className="flex justify-between text-sm">
                     <span className="text-luxury-text/70">
-                      {item.product.name} × {item.quantity}
+                      {item.product.name}{item.size ? ` (Size ${item.size})` : ""} × {item.quantity}
                     </span>
                     <span className="text-luxury-text">
                       Rs. {(price * item.quantity).toLocaleString()}

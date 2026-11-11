@@ -17,6 +17,9 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
   const images = [product.image1, product.image2, product.image3].filter(
     (img): img is string => Boolean(img)
   );
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [sizeError, setSizeError] = useState(false);
+  const needsSize = product.sizes.length > 0;
 
   const stock = product.stock;
   const isOutOfStock = product.stock === 0;
@@ -131,6 +134,16 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
             <p className="mt-6 text-sm leading-relaxed text-luxury-text/80">
               {product.description}
             </p>
+            {product.details && (
+             <div className="mt-6 border-t border-luxury-tan/40 pt-6">
+             <h3 className="text-sm font-semibold tracking-wide text-luxury-text uppercase">
+                Product Details
+             </h3>
+             <p className="mt-2 text-sm whitespace-pre-line text-luxury-text/70">
+               {product.details}
+             </p>
+             </div>
+              )}
 
             <div className="mt-6 border-t border-luxury-tan/40 pt-6">
               <h3 className="text-sm font-semibold tracking-wide text-luxury-text uppercase">
@@ -143,6 +156,39 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
             <p className="mt-1 text-xs text-yellow-400">
              Actual Colors may differ slightly from the images shown
            </p>
+
+           {needsSize && !isOutOfStock && (
+  <div className="mt-8">
+    <p className="text-sm text-luxury-text/70">
+      Select Size <span className="text-red-500">*</span>
+    </p>
+    <div className="mt-3 flex flex-wrap gap-3">
+      {product.sizes.map((size) => (
+        <button
+          key={size}
+          type="button"
+          onClick={() => {
+            setSelectedSize(size);
+            setSizeError(false);
+          }}
+          className={cn(
+            "min-w-14 rounded-full border px-5 py-2 text-sm transition-colors",
+            selectedSize === size
+              ? "border-transparent bg-gold-gradient text-luxury-black"
+              : "border-luxury-tan/60 bg-white/60 text-luxury-text hover:border-luxury-gold"
+          )}
+        >
+          {size}
+        </button>
+      ))}
+    </div>
+    {sizeError && (
+      <p className="mt-2 text-xs text-red-500">
+        Please select a bangle size before adding to cart.
+      </p>
+    )}
+  </div>
+)}
 
             {/* Quantity selector */}
             {!isOutOfStock && (
@@ -174,19 +220,27 @@ export function ProductDetailClient({ product }: { product: DbProduct }) {
 
             {/* Add to cart */}
             <button
-              onClick={() =>
-                addToCart(
-                  {
-                    id: product.id,
-                    name: product.name,
-                    category: product.category,
-                    price: product.price,
-                    discountPrice: product.discountPrice ?? undefined,
-                    stock: product.stock,
-                  },
-                  quantity
-                )
-              }
+              onClick={() => {
+              if (needsSize && !selectedSize) {
+              setSizeError(true);
+                return;
+               }
+
+             addToCart(
+              {
+               id: product.id,
+               name: product.name,
+               category: product.category,
+               subCategory: product.subCategory,
+               price: product.price,
+               discountPrice: product.discountPrice ?? undefined,
+               stock: product.stock,
+               image1: product.image1,
+              },
+             quantity,
+             selectedSize ?? undefined
+             );
+            }}
               disabled={isOutOfStock}
               className={cn(
                 "mt-8 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-semibold transition-colors sm:w-auto sm:px-12",

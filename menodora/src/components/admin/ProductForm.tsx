@@ -6,23 +6,36 @@ import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { categoryTree, mainCategories } from "@/lib/categories";
 
-const productSchema = z.object({
-  name: z.string().min(2, { message: "Name is required" }),
-  category: z.string().min(2, { message: "Category is required" }),
-  price: z.number().positive({ message: "Price must be greater than 0" }),
-  discountPrice: z
-    .number()
-    .positive({ message: "Sale price must be greater than 0" })
-    .optional()
-    .or(z.nan().transform(() => undefined)),
-  stock: z.number().int().min(0, { message: "Stock cannot be negative" }),
-  description: z.string().min(10, { message: "Description must be at least 10 characters" }),
-  careInstructions: z.string().min(5, { message: "Care instructions are required" }),
-  image1: z.string().optional(),
-  image2: z.string().optional(),
-  image3: z.string().optional(),
-});
+const productSchema = z
+  .object({
+    name: z.string().min(2, { message: "Name is required" }),
+    category: z.string().min(2, { message: "Please choose a category" }),
+    subCategory: z.string().optional(),
+    sizes: z.array(z.string()).optional(),
+    price: z.number().positive({ message: "Price must be greater than 0" }),
+    discountPrice: z
+      .number()
+      .positive({ message: "Sale price must be greater than 0" })
+      .optional()
+      .or(z.nan().transform(() => undefined)),
+    stock: z.number().int().min(0, { message: "Stock cannot be negative" }),
+    description: z.string().min(10, { message: "Description must be at least 10 characters" }),
+    details: z.string().optional(),
+    careInstructions: z.string().min(5, { message: "Care instructions are required" }),
+    image1: z.string().optional(),
+    image2: z.string().optional(),
+    image3: z.string().optional(),
+  })
+    .refine(
+    (d) => !!d.subCategory && (categoryTree[d.category] ?? []).includes(d.subCategory),
+    { message: "Please choose a sub-category", path: ["subCategory"] }
+  )
+  .refine(
+    (d) => d.subCategory !== "Bangles" || (d.sizes && d.sizes.length > 0),
+    { message: "Select at least one bangle size", path: ["sizes"] }
+  );
 
 export type ProductFormValues = z.infer<typeof productSchema>;
 
@@ -44,13 +57,16 @@ export function ProductForm({ mode, productId, defaultValues }: ProductFormProps
   formState: { errors, isSubmitting },
 } = useForm<ProductFormValues>({
   resolver: zodResolver(productSchema),
-  defaultValues,
+  defaultValues: { sizes: [], ...defaultValues },
 });
 
 const [uploadingSlot, setUploadingSlot] = useState<number | null>(null);
 const image1 = useWatch({ control, name: "image1" });
 const image2 = useWatch({ control, name: "image2" });
 const image3 = useWatch({ control, name: "image3" });
+
+const selectedCategory = useWatch({ control, name: "category" });
+const selectedSubCategory = useWatch({ control, name: "subCategory" });
 
 async function handleImageUpload(
   e: React.ChangeEvent<HTMLInputElement>,
@@ -118,18 +134,71 @@ function handleImageRemove(slot: 1 | 2 | 3) {
         )}
       </div>
 
-      <div>
-        <label className="text-sm text-gray-400">Category</label>
-        <input
-          {...register("category")}
-          type="text"
-          placeholder="e.g. Cotton, Lawn, Mixed Fabric"
-          className="mt-1 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
-        />
-        {errors.category && (
-          <p className="mt-1 text-xs text-red-500">{errors.category.message}</p>
-        )}
-      </div>
+    <div>
+  <label className="text-sm text-gray-400">Category</label>
+  <select
+    {...register("category")}
+    defaultValue=""
+    className="mt-1 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+  >
+    <option value="" disabled>
+      Select a category
+    </option>
+    <option value="Cotton">Cotton</option>
+    <option value="Lawn">Lawn</option>
+    <option value="Mixed Fabric">Mixed Fabric</option>
+    <option value="Embroidered">Embroidered</option>
+    <option value="Jewellery">Jewellery</option>
+  </select>
+  {errors.category && (
+    <p className="mt-1 text-xs text-red-500">{errors.category.message}</p>
+  )}
+</div>
+
+{selectedCategory === "Jewellery" && (
+  <div>
+    <label className="text-sm text-gray-400">Sub-category</label>
+    <select
+      {...register("subCategory")}
+      defaultValue=""
+      className="mt-1 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+    >
+      <option value="" disabled>
+        Choose Bangles or Rings
+      </option>
+      <option value="Bangles">Bangles</option>
+      <option value="Rings">Rings</option>
+    </select>
+    {errors.subCategory && (
+      <p className="mt-1 text-xs text-red-500">{errors.subCategory.message}</p>
+    )}
+  </div>
+)}
+
+{selectedCategory === "Jewellery" && selectedSubCategory === "Bangles" && (
+  <div>
+    <label className="text-sm text-gray-400">Available Sizes</label>
+    <div className="mt-2 flex flex-wrap gap-3">
+      {["2.2", "2.4", "2.6", "2.8"].map((size) => (
+        <label
+          key={size}
+          className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-neutral-950 px-4 py-2 text-sm text-white has-[:checked]:border-luxury-gold"
+        >
+          <input
+            type="checkbox"
+            value={size}
+            {...register("sizes")}
+            className="accent-luxury-gold"
+          />
+          {size}
+        </label>
+      ))}
+    </div>
+    {errors.sizes && (
+      <p className="mt-1 text-xs text-red-500">{errors.sizes.message}</p>
+    )}
+  </div>
+)}
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         <div>
@@ -166,17 +235,17 @@ function handleImageRemove(slot: 1 | 2 | 3) {
         </div>
       </div>
 
-      <div>
-        <label className="text-sm text-gray-400">Description</label>
-        <textarea
-          {...register("description")}
-          rows={4}
-          className="mt-1 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
-        />
-        {errors.description && (
-          <p className="mt-1 text-xs text-red-500">{errors.description.message}</p>
-        )}
-      </div>
+     <div>
+  <label className="text-sm text-gray-400">
+    Product Details (optional)
+  </label>
+  <textarea
+    {...register("details")}
+    rows={5}
+    placeholder="Materials, measurements, what's in the box, styling tips..."
+    className="mt-1 w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white focus:border-luxury-gold focus:outline-none"
+  />
+</div>
 
       <div>
         <label className="text-sm text-gray-400">Care Instructions</label>

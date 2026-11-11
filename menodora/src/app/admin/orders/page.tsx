@@ -64,7 +64,7 @@ export default async function AdminOrdersPage() {
                   className="flex justify-between text-sm text-gray-400"
                 >
                   <span>
-                    {item.productName} × {item.quantity}
+                    {item.productName}{item.size ? ` (Size ${item.size})` : ""} × {item.quantity}
                   </span>
                   <span>Rs. {(item.price * item.quantity).toLocaleString()}</span>
                 </div>

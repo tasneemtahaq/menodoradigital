@@ -6,7 +6,7 @@ type OrderNotificationData = {
   city: string;
   paymentMethod: string;
   transactionId: string | null;
-  items: { productName: string; quantity: number; price: number }[];
+  items: { productName: string; quantity: number; price: number; size?: string | null; }[];
   grandTotal: number;
 };
 
@@ -19,7 +19,7 @@ export async function sendOrderNotification(order: OrderNotificationData) {
   }
 
   const itemsList = order.items
-    .map((item) => `• ${item.productName} × ${item.quantity} — Rs. ${(item.price * item.quantity).toLocaleString()}`)
+    .map((item) => `• ${item.productName}${item.size ? ` (Size ${item.size})` : ""} × ${item.quantity} — Rs. ${(item.price * item.quantity).toLocaleString()}`)
     .join("\n");
 
   const embed = {

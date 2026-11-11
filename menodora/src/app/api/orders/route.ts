@@ -8,6 +8,7 @@ type OrderItemInput = {
   productName: string;
   price: number;
   quantity: number;
+  size?: string;
 };
 
 type OrderRequestBody = {
@@ -36,6 +37,24 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    const dbProducts = await prisma.product.findMany({
+  where: { id: { in: body.items.map((item) => item.productId) } },
+  select: { id: true, name: true, sizes: true },
+});
+
+for (const item of body.items) {
+  const dbProduct = dbProducts.find((p) => p.id === item.productId);
+  if (
+    dbProduct &&
+    dbProduct.sizes.length > 0 &&
+    (!item.size || !dbProduct.sizes.includes(item.size))
+  ) {
+    return NextResponse.json(
+      { error: `Please select a valid size for ${dbProduct.name}` },
+      { status: 400 }
+    );
+  }
+}
 
     const orderNumber = `MNO-${Date.now()}`;
 
@@ -61,6 +80,7 @@ export async function POST(request: Request) {
             productName: item.productName,
             price: item.price,
             quantity: item.quantity,
+            size: item.size ?? null,
           })),
         },
       },

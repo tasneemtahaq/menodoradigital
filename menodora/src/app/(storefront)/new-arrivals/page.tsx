@@ -27,7 +27,7 @@ export default async function NewArrivalsPage() {
     price: p.price,
     discountPrice: p.discountPrice ?? undefined,
     stock: p.stock,
-    image1: p.image1,
+    image1: p.image1, subCategory: p.subCategory, subCategory: p.subCategory,
   }));
 
   return (

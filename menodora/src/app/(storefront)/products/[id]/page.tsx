@@ -73,13 +73,11 @@ const breadcrumbJsonLd = {
 };
 
 const relatedDbProducts = await prisma.product.findMany({
-  where: {
-    category: product.category,
-    id: { not: product.id },
-  },
+  where: product.subCategory
+    ? { subCategory: product.subCategory, id: { not: product.id } }
+    : { category: product.category, id: { not: product.id } },
   take: 4,
 });
-
 const relatedProducts: Product[] = relatedDbProducts.map((p) => ({
   id: p.id,
   name: p.name,
@@ -87,7 +85,7 @@ const relatedProducts: Product[] = relatedDbProducts.map((p) => ({
   price: p.price,
   discountPrice: p.discountPrice ?? undefined,
   stock: p.stock,
-  image1: p.image1,
+  image1: p.image1, subCategory: p.subCategory,
 }));
 
   return (

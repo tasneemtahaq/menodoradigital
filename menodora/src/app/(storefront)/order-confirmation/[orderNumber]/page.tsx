@@ -45,7 +45,7 @@ export default async function OrderConfirmationPage({
             {order.items.map((item) => (
               <div key={item.id} className="flex justify-between text-sm">
                 <span className="text-luxury-text/70">
-                  {item.productName} × {item.quantity}
+                  {item.productName}{item.size ? ` (Size ${item.size})` : ""} × {item.quantity}
                 </span>
                 <span className="text-luxury-text">
                   Rs. {(item.price * item.quantity).toLocaleString()}

@@ -42,6 +42,9 @@ export async function PATCH(
         image1: body.image1 || null,
         image2: body.image2 || null,
         image3: body.image3 || null,
+        subCategory: body.category === "Jewellery" ? body.subCategory || null : null,
+        sizes: body.subCategory === "Bangles" ? body.sizes ?? [] : [],
+        details: body.details || null, 
       },
     });
 

@@ -43,7 +43,7 @@ export default async function AdminProductsPage() {
                 <td className="px-6 py-4 font-medium text-white">
                   {product.name}
                 </td>
-                <td className="px-6 py-4">{product.category}</td>
+                <td className="px-6 py-4">{product.category}{product.subCategory ? ` · ${product.subCategory}` : ""}</td>
                 <td className="px-6 py-4">
                   Rs. {product.price.toLocaleString()}
                   {product.discountPrice && (

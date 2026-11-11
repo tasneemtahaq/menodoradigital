@@ -4,24 +4,43 @@ import { useState, useMemo } from "react";
 import { ProductCard, type Product } from "@/components/ui/ProductCard";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
+import { categoryTree, mainCategories } from "@/lib/categories";
+import Link from "next/link";
 
-const categoryFilters = ["All", "Cotton", "Lawn", "Mixed Fabric", "Embroidered"];
+
 
 type SortOption = "default" | "price-asc" | "price-desc";
 
 export function ShopClient({ products }: { products: Product[] }) {
   const searchParams = useSearchParams();
-  const categoryFromUrl = searchParams.get("category");
-  const [activeCategory, setActiveCategory] = useState(categoryFromUrl || "All");
+ const categoryFromUrl = searchParams.get("category");
+const subFromUrl = searchParams.get("sub");
+const searchTerm = searchParams.get("search");
+const validCategory =
+  categoryFromUrl && categoryTree[categoryFromUrl]
+    ? categoryFromUrl
+    : searchTerm
+      ? "All"
+      : mainCategories[0];
+const [activeCategory, setActiveCategory] = useState(validCategory);
+const [activeSub, setActiveSub] = useState(
+  validCategory !== "All" && subFromUrl ? subFromUrl : "All"
+);
+  
+ 
   const searchFromUrl = searchParams.get("search") || "";
   const [sortOption, setSortOption] = useState<SortOption>("default");
 
   const visibleProducts = useMemo(() => {
   let result = products;
 
-  if (activeCategory !== "All") {
-    result = result.filter((product) => product.category === activeCategory);
-  }
+  if (!searchFromUrl && activeCategory !== "All") {
+  result = result.filter((product) => product.category === activeCategory);
+}
+
+if (!searchFromUrl && activeSub !== "All") {
+  result = result.filter((product) => product.subCategory === activeSub);
+}
 
   if (searchFromUrl) {
     result = result.filter((product) =>
@@ -46,6 +65,14 @@ export function ShopClient({ products }: { products: Product[] }) {
     return result;
   }, [products, activeCategory, sortOption, searchFromUrl]);
 
+  const pillClass = (isActive: boolean) =>
+  cn(
+    "rounded-full px-4 py-2 text-sm transition-colors",
+    isActive
+      ? "bg-gold-gradient text-luxury-black"
+      : "bg-white/60 text-luxury-text/80 hover:bg-luxury-sand"
+  );
+
   return (
     <main className="min-h-screen bg-transparent pt-32 pb-24">
       <div className="mx-auto max-w-7xl px-6 md:px-12">
@@ -59,22 +86,45 @@ export function ShopClient({ products }: { products: Product[] }) {
         </div>
 
         <div className="mb-10 flex flex-col items-center justify-between gap-6 border-b border-luxury-tan/40 pb-6 sm:flex-row">
-          <div className="flex flex-wrap justify-center gap-2">
-            {categoryFilters.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm transition-colors",
-                  activeCategory === category
-                    ? "bg-gold-gradient text-luxury-black"
-                    : "bg-white-60 text-luxury-text/80 hover:bg-luxury-sand/60"
-                )}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+          {searchFromUrl ? (
+  <p className="text-sm text-luxury-text/70">
+    Showing results for &quot;{searchFromUrl}&quot; —{" "}
+    <Link href="/shop" className="text-luxury-gold-dark hover:underline">
+      clear search
+    </Link>
+  </p>
+) : (
+  <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-wrap justify-center gap-2">
+      {mainCategories.map((category) => (
+        <button
+          key={category}
+          onClick={() => {
+            setActiveCategory(category);
+            setActiveSub("All");
+          }}
+          className={pillClass(activeCategory === category)}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
+
+    {activeCategory !== "All" && (
+      <div className="flex flex-wrap justify-center gap-2">
+        {["All", ...categoryTree[activeCategory]].map((sub) => (
+          <button
+            key={sub}
+            onClick={() => setActiveSub(sub)}
+            className={pillClass(activeSub === sub)}
+          >
+            {sub === "All" ? `All ${activeCategory}` : sub}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+)}
 
           <select
             value={sortOption}

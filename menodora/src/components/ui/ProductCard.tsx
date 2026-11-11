@@ -11,6 +11,7 @@ export type Product = {
   discountPrice?: number;
   stock: number;
   image1?: string | null;
+  subCategory?: string | null;
 };
 
 export function ProductCard({ product }: { product: Product }) {
@@ -57,7 +58,7 @@ export function ProductCard({ product }: { product: Product }) {
       {/* Info */}
       <div className="p-5">
         <p className="text-xs tracking-wide text-luxury-text/70 uppercase">
-          {product.category}
+          {product.subCategory ?? product.category}
         </p>
         <h3 className="mt-1 text-base font-semibold text-luxury-text">
           {product.name}

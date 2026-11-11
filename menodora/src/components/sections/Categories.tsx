@@ -1,44 +1,46 @@
+
+"use client";
+
 "use client";
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  Shirt,
-  Wind,
-  Layers,
-  Flower2,
-  type LucideIcon,
-} from "lucide-react";
+import { Shirt, Gem, ShoppingBag, type LucideIcon } from "lucide-react";
+import { categoryTree } from "@/lib/categories";
 
-const categories: {
+type CategoryItem = {
   id: string;
   name: string;
+  category: string;
+  subtitle: string;
   icon: LucideIcon;
   accent: string;
-}[] = [
+};
+
+const categories: CategoryItem[] = [
   {
-    id: "Cotton",
-    name: "Cotton",
+    id: "rida",
+    name: "Rida",
+    category: "Rida",
+    subtitle: categoryTree.Rida.join(" · "),
     icon: Shirt,
-    accent: "from-amber-500/20",
+    accent: "from-luxury-gold/20",
   },
   {
-    id: "Lawn",
-    name: "Lawn",
-    icon: Wind,
-    accent: "from-emerald-500/20",
+    id: "jewellery",
+    name: "Jewellery",
+    category: "Jewellery",
+    subtitle: categoryTree.Jewellery.join(" · "),
+    icon: Gem,
+    accent: "from-luxury-tan/40",
   },
-  {
-    id: "Mixed Fabric",
-    name: "Mixed Fabric",
-    icon: Layers,
-    accent: "from-yellow-600/20",
-  },
-  {
-    id: "Embroidered",
-    name: "Embroidered",
-    icon: Flower2,
-    accent: "from-rose-400/20",
+    {
+    id: "bags",
+    name: "Bags & More",
+    category: "Bags & More",
+    subtitle: categoryTree["Bags & More"].join(" · "),
+    icon: ShoppingBag,
+    accent: "from-luxury-sand/80",
   },
 ];
 
@@ -205,18 +207,7 @@ export function Categories() {
             CATEGORY GRID
         ======================================================= */}
         <div
-          className="
-            grid
-            grid-cols-1
-            justify-items-center
-            gap-y-20
-            sm:grid-cols-2
-            sm:gap-x-8
-            sm:gap-y-24
-            lg:grid-cols-4
-            lg:gap-x-12
-            lg:gap-y-0
-          "
+          className="mx-auto grid max-w-5xl grid-cols-1 justify-items-center gap-y-16 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3"
           style={{ perspective: "1200px" }}
         >
           {categories.map((category, index) => {
@@ -251,17 +242,9 @@ export function Categories() {
                 "
               >
                 <Link
-                  href={`/shop?category=${encodeURIComponent(
-                    category.id
-                  )}`}
-                  className="
-                    flex
-                    w-full
-                    flex-col
-                    items-center
-                    outline-none
-                  "
-                >
+                  href={`/shop?category=${encodeURIComponent(category.category)}`}
+                  className="flex flex-col items-center"
+>
                   {/* =================================================
                       CIRCLE PAIR WRAPPER
                   ================================================= */}
@@ -497,6 +480,10 @@ export function Categories() {
                     "
                   >
                     {category.name}
+                  </span>
+
+                  <span className="mt-1 text-center text-xs text-luxury-text/60">
+                     {category.subtitle}
                   </span>
 
                   {/* =====================================================

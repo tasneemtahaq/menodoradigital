@@ -17,6 +17,9 @@ export async function POST(request: Request) {
     image1: body.image1 || null,
     image2: body.image2 || null,
     image3: body.image3 || null,
+    subCategory: body.subCategory || null,
+    sizes: body.subCategory === "Bangles" ? body.sizes ?? [] : [],
+    details: body.details || null,
   },
 });
 
